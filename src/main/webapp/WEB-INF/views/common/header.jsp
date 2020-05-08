@@ -11,10 +11,12 @@
     <h1>header</h1>
     <c:choose>
         <c:when test="${empty user}">
-            <h2>Sessions not Exist!</h2>
+            <li><a href="<c:url value="/user/signup" />">회원가입</a></li>
+            <li><a href="<c:url value="/user/signin" />">로그인</a></li>
         </c:when>
         <c:otherwise>
-            <h2>Session(user): ${user.get().nickname}</h2>
+            <li>Session(user): ${user.get().nickname}</li>
+            <li><a href="<c:url value="/user/signout" />">로그아웃</a></li>
         </c:otherwise>
     </c:choose>
 </header>
