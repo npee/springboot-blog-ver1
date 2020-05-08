@@ -1,8 +1,11 @@
 package com.npee.npeeblog.model.entity;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Builder
@@ -17,6 +20,10 @@ public class Blog {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long blogNo;
 
+    @OneToOne
+    @JoinColumn(name = "USER_NO")
+    private User userTable;
+
     @Column(nullable = false, length = 50)
     private String title;
 
@@ -26,7 +33,8 @@ public class Blog {
     @Column(nullable = false)
     private Long count;
 
-    @Column(nullable = false)
-    private String registerDate;
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime registerDate;
 
 }
