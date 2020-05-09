@@ -1,8 +1,10 @@
 package com.npee.npeeblog.service;
 
 import com.npee.npeeblog.model.entity.Blog;
+import com.npee.npeeblog.model.entity.Category;
 import com.npee.npeeblog.model.entity.User;
 import com.npee.npeeblog.model.repository.BlogJpaRepository;
+import com.npee.npeeblog.model.repository.CategoryJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,9 +18,10 @@ import java.util.Date;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class BlogServiceImpl implements BlogService {
+public class BlogServiceImpl implements BlogService, CategoryService{
 
     private final BlogJpaRepository blogJpaRepository;
+    private final CategoryJpaRepository categoryJpaRepository;
 
 //    Date date = new Date();
 //    SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
@@ -32,6 +35,14 @@ public class BlogServiceImpl implements BlogService {
                 .image("default url")
                 .count(0L)
                 .registerDate(LocalDateTime.now().plusHours(9L))
+                .build());
+    }
+
+    @Override
+    public Category builder(Blog blog, String category) {
+        return categoryJpaRepository.save(Category.builder()
+                .blogTable(blog)
+                .category(category)
                 .build());
     }
 }
