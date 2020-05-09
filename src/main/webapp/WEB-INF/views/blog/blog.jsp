@@ -11,9 +11,23 @@
 <head>
     <title>title</title>
 </head>
+<%--@elvariable id="user" type="Optional<User>"--%>
+<%--@elvariable id="bloger" type="Optional<User>"--%>
+<%--@elvariable id="blog" type="Optional<Blog>"--%>
 <body>
     <c:import url="/WEB-INF/views/common/header.jsp" />
     <h1>body</h1>
+    <c:choose>
+        <c:when test="${empty user}">
+            <h2>user: empty</h2>
+        </c:when>
+        <c:when test="${user.get().userNo eq bloger.get().userNo }">
+            <h2>user: author</h2>
+        </c:when>
+        <c:otherwise>
+            <h2>user: guest(${user.get().nickname})</h2>
+        </c:otherwise>
+    </c:choose>
     <h2>title: ${blog.get().title}</h2>
     <h3>userNo: ${bloger.get().userNo}</h3>
     <h3>nickname: ${bloger.get().nickname}</h3>
