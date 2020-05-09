@@ -14,6 +14,7 @@
 <%--@elvariable id="user" type="Optional<User>"--%>
 <%--@elvariable id="bloger" type="Optional<User>"--%>
 <%--@elvariable id="blog" type="Optional<Blog>"--%>
+<%--@elvariable id="categories" type="List<Optional<Category>>"--%>
 <body>
     <c:import url="/WEB-INF/views/common/header.jsp" />
     <h1>body</h1>
@@ -33,6 +34,12 @@
     <h3>nickname: ${bloger.get().nickname}</h3>
     <h3>email: ${bloger.get().email}</h3>
     <h3>registered: ${bloger.get().registerDate}</h3>
+    <h3>category list</h3>
+    <ul>
+        <c:forEach items="${categories}" var="category">
+            <li>CategoryNo: ${category.get().categoryNo} | Category: ${category.get().category}</li>
+        </c:forEach>
+    </ul>
     <c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>
 </html>
