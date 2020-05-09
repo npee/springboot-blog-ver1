@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Builder
 @Entity
@@ -20,10 +21,6 @@ public class Blog {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long blogNo;
 
-    @OneToOne
-    @JoinColumn(name = "USER_NO")
-    private User userTable;
-
     @Column(nullable = false, length = 50)
     private String title;
 
@@ -36,5 +33,12 @@ public class Blog {
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime registerDate;
+
+    @OneToOne
+    @JoinColumn(name = "USER_NO")
+    private User userTable;
+
+    @OneToMany(mappedBy = "blogTable")
+    private List<Category> categories;
 
 }

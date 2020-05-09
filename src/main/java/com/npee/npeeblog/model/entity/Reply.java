@@ -19,18 +19,14 @@ public class Reply {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long replyNo;
 
-    @ManyToOne
-    @JoinColumn(name = "BLOG_NO")
-    Blog blogTable;
-
-    @ManyToOne
-    @JoinColumn(name = "CATEGORY_NO")
-    Category categoryTable;
-
     @Column(nullable = false)
     private String reply;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime registerDate;
+
+    @ManyToOne
+    @JoinColumn(name = "POST_NO")
+    private Category postTable;
 }

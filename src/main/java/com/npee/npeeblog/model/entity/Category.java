@@ -3,6 +3,7 @@ package com.npee.npeeblog.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Builder
 @Entity
@@ -16,13 +17,16 @@ public class Category {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryNo;
 
-    @ManyToOne
-    @JoinColumn(name = "BLOG_NO")
-    Blog blogTable;
-
     @Column(nullable = false, length = 50)
     private String category;
 
     @Column
     private String description;
+
+    @OneToMany(mappedBy = "categoryTable")
+    private List<Post> posts;
+
+    @ManyToOne
+    @JoinColumn(name = "BLOG_NO")
+    private Blog blogTable;
 }

@@ -22,9 +22,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userNo;
 
-    @OneToOne(mappedBy = "userTable")
-    private Blog blogTable;
-
     @Email
     @Column(nullable = false, unique = true, length = 50)
     private String email;
@@ -39,4 +36,6 @@ public class User {
     @Column(nullable = false, updatable = false)
     private LocalDateTime registerDate;
 
+    @OneToOne(mappedBy = "userTable")
+    private Blog blogTable;
 }
