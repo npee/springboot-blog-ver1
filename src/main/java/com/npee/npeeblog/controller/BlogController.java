@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/blog")
+@RequestMapping("/")
 @AllArgsConstructor
 public class BlogController {
 
@@ -33,6 +33,6 @@ public class BlogController {
             session.setAttribute("blog", blog);
         }
 
-        return "blog/main";
+        return "blog/blog";
     }
 }
