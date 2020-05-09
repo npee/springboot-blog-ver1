@@ -11,10 +11,17 @@
   <head>
     <title>title</title>
   </head>
+  <%--@elvariable id="blogs" type="List<Blog>"--%>
   <body>
     <c:import url="/WEB-INF/views/common/header.jsp" />
     <h1>body</h1>
-    <h2>main</h2>
+    <c:choose>
+      <c:when test="${not empty blogs}">
+        <c:forEach items="${blogs}" var="blog">
+          <li><a href="/${blog.userTable.nickname}">${blog.title}</a></li>
+        </c:forEach>
+      </c:when>
+    </c:choose>
     <c:import url="/WEB-INF/views/common/footer.jsp" />
   </body>
 </html>
