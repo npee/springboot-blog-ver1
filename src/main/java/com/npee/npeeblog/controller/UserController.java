@@ -1,5 +1,6 @@
 package com.npee.npeeblog.controller;
 
+import com.npee.npeeblog.model.entity.Blog;
 import com.npee.npeeblog.model.entity.User;
 import com.npee.npeeblog.model.repository.UserJpaRepository;
 import com.npee.npeeblog.service.BlogServiceImpl;
@@ -47,7 +48,8 @@ public class UserController {
         }
 
         User tempUser = userService.builder(email, password, nickname);
-        blogService.builder(tempUser, nickname);
+        Blog tempBlog = blogService.builder(tempUser, nickname);
+        blogService.builder(tempBlog, "sample_category");
 
         log.debug("회원가입 성공!");
         log.debug(tempUser.toString());
