@@ -40,6 +40,24 @@
             <li>CategoryNo: ${category.get().categoryNo} | Category: ${category.get().category}</li>
         </c:forEach>
     </ul>
+
+    <h2>write</h2>
+    <!-- start -->
+    <c:choose>
+        <c:when test="${user.get().userNo eq bloger.get().userNo }">
+            <form action="<c:url value="/${user.get().nickname}/write" />" method="POST">
+                <label for="post-title">title: </label>
+                <input id="post-title" type="text" name="postTitle" value=""><br>
+                <label for="post-body">body: </label>
+                <input id="post-body" type="text" name="postBody" value=""><br>
+                <button id="post-submit" type="submit">submit</button>
+            </form>
+        </c:when>
+        <c:otherwise>
+            <h3>Need Sign</h3>
+        </c:otherwise>
+    </c:choose>
+    <!-- end -->
     <c:import url="/WEB-INF/views/common/footer.jsp" />
 </body>
 </html>
