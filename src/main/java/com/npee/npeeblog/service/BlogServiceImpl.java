@@ -9,11 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +19,6 @@ public class BlogServiceImpl implements BlogService, CategoryService{
     private final BlogJpaRepository blogJpaRepository;
     private final CategoryJpaRepository categoryJpaRepository;
 
-//    Date date = new Date();
-//    SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
-//    String now = format.format(date);
-
     @Override
     public Blog builder(User user, String nickname) {
         return blogJpaRepository.save(Blog.builder()
@@ -35,6 +27,7 @@ public class BlogServiceImpl implements BlogService, CategoryService{
                 .image("default url")
                 .count(0L)
                 .registerDate(LocalDateTime.now().plusHours(9L))
+                .blogNo(user.getUserNo())
                 .build());
     }
 

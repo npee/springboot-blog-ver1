@@ -6,8 +6,6 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Date;
 
 @Builder
 @Entity
@@ -17,10 +15,13 @@ import java.util.Date;
 @NoArgsConstructor
 @Table(name = "users")
 public class User {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userNo;
+
+    @Column(nullable = false, unique = true)
+    private String nickname;
 
     @Email
     @Column(nullable = false, unique = true, length = 50)
@@ -28,9 +29,6 @@ public class User {
 
     @Column(nullable = false)
     private String password;
-
-    @Column(nullable = false, unique = true)
-    private String nickname;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "blogs")
 public class Blog {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private Long blogNo;
 
     @Column(nullable = false, length = 50)
