@@ -1,6 +1,10 @@
 # springboot-blog
 ## Summary
 ## Update
+### 2020.05.09
+* Update sign-in method(with Referer)
+* Create Service(Find all categories)
+* Update View(Print all blogs at Home)
 ### 2020.05.08
 * Create Service(Sign-up)
 * Create View(Sign)  
