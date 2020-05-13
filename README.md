@@ -2,8 +2,8 @@
 ## Summary
 ## Update
 
-### 2020.05.11
 ### 2020.05.10
+* Update blogs table(Change Primary key strategy)
 ### 2020.05.09
 * Update sign-in method(with Referer)
 * Create Service(Find all categories)
