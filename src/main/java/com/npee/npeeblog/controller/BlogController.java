@@ -54,6 +54,8 @@ public class BlogController {
                 categories = categoryJpaRepository.findAllByCategoryFromBlog_BlogNo(blog.get().getBlogNo());
                 categories.ifPresent(myCategories -> session.setAttribute("categories", myCategories));
 
+                posts = postJpaRepository.findAllByPostFromBlog_BlogNo(blog.get().getBlogNo());
+                posts.ifPresent(myPosts -> session.setAttribute("posts", myPosts));
             }
         }
 
@@ -94,6 +96,8 @@ public class BlogController {
         User bloger = userJpaRepository.findByNickname(nickname).get();
 
         Long currentBlogNo = post.getPostFromBlog().getBlogNo();
+
+        List<Post> posts = postJpaRepository.findAllByPostFromBlog_BlogNo(currentBlogNo).get();
         Long blogNoOfCurrentPost = blog.getBlogFromUser().getUserNo();
 
         if (currentBlogNo.equals(blogNoOfCurrentPost)) {
@@ -106,6 +110,7 @@ public class BlogController {
             // String categoryName = categoryJpaRepository.findByCategoryNo(categoryNo).get().getCategory();
             String categoryName = post.getPostFromCategory().getCategory();
             session.setAttribute("bloger", bloger);
+            session.setAttribute("posts", posts);
             session.setAttribute("post", post);
             session.setAttribute("categoryName", categoryName);
             postJpaRepository.save(post);
