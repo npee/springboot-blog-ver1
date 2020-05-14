@@ -11,10 +11,11 @@
 <head>
     <title>title</title>
 </head>
-<%--@elvariable id="user" type="Optional<User>"--%>
-<%--@elvariable id="bloger" type="Optional<User>"--%>
-<%--@elvariable id="blog" type="Optional<Blog>"--%>
-<%--@elvariable id="categories" type="List<Optional<Category>>"--%>
+<%--@elvariable id="user" type="User"--%>
+<%--@elvariable id="bloger" type="User"--%>
+<%--@elvariable id="blog" type="Blog"--%>
+<%--@elvariable id="categories" type="List<Category>>"--%>
+<%--@elvariable id="posts" type="List<Post>>"--%>
 <body>
     <c:import url="/WEB-INF/views/common/header.jsp" />
     <h1>body</h1>
@@ -22,35 +23,42 @@
         <c:when test="${empty user}">
             <h2>user: empty</h2>
         </c:when>
-        <c:when test="${user.get().userNo eq bloger.get().userNo }">
+        <c:when test="${user.userNo eq bloger.userNo }">
             <h2>user: author</h2>
         </c:when>
         <c:otherwise>
-            <h2>user: guest(${user.get().nickname})</h2>
+            <h2>user: guest(${user.nickname})</h2>
         </c:otherwise>
     </c:choose>
-    <h2>title: ${blog.get().title}</h2>
-    <h3>userNo: ${bloger.get().userNo}</h3>
-    <h3>nickname: ${bloger.get().nickname}</h3>
-    <h3>email: ${bloger.get().email}</h3>
-    <h3>registered: ${bloger.get().registerDate}</h3>
+    <h2>title: ${blog.title}</h2>
+    <h3>userNo: ${bloger.userNo}</h3>
+    <h3>nickname: ${bloger.nickname}</h3>
+    <h3>email: ${bloger.email}</h3>
+    <h3>registered: ${bloger.registerDate}</h3>
 
     <h3>category list</h3>
     <ul id="category-list">
         <c:forEach items="${categories}" var="category">
-            <li><a href="<c:url value="/${user.get().nickname}/${category.get().categoryNo}" />">${category.get().category}</a></li>
+            <li><a href="<c:url value="/${user.nickname}/categories/${category.categoryNo}" />">${category.category}</a></li>
+        </c:forEach>
+    </ul>
+
+    <h3>post list</h3>
+    <ul id="post-list">
+        <c:forEach items="${posts}" var="post">
+            <li><a href="<c:url value="/${user.nickname}/${post.postNo}" />">${post.title}</a></li>
         </c:forEach>
     </ul>
 
     <h2>write</h2>
     <!-- start -->
     <c:choose>
-        <c:when test="${user.get().userNo eq bloger.get().userNo }">
-            <form action="<c:url value="/${user.get().nickname}/write" />" method="POST">
+        <c:when test="${user.userNo eq bloger.userNo }">
+            <form action="<c:url value="/${user.nickname}/write" />" method="POST">
                 <label for="category">Select Category</label>
                 <select name="categoryNo" id="category">
                     <c:forEach items="${categories}" var="category">
-                        <option value="${category.get().categoryNo}">${category.get().category}</option>
+                        <option value="${category.categoryNo}">${category.category}</option>
                     </c:forEach>
                 </select><br>
                 <label for="post-title">title: </label>

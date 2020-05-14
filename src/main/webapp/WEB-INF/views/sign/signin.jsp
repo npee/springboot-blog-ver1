@@ -16,7 +16,8 @@
     <h1>body</h1>
     <form action="<c:url value="/user/signin" />" name="signinForm" method="POST">
         <label>이메일</label>
-        <input type="email" id="email" name="email" />
+<%--        <input type="email" id="email" name="email" />--%>
+        <input type="text" id="id" name="email" />
         <br>
         <label>비밀번호</label>
         <input type="password" id="password" name="password" />

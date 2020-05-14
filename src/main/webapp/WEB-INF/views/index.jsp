@@ -18,7 +18,7 @@
     <c:choose>
       <c:when test="${not empty blogs}">
         <c:forEach items="${blogs}" var="blog">
-          <li><a href="/${blog.userTable.nickname}">${blog.title}</a></li>
+          <li><a href="/${blog.blogFromUser.nickname}">${blog.title}</a></li>
         </c:forEach>
       </c:when>
     </c:choose>

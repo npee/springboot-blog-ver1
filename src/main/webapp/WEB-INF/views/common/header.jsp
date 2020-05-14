@@ -15,7 +15,7 @@
             <li><a href="<c:url value="/user/signin" />">로그인</a></li>
         </c:when>
         <c:otherwise>
-            <li>Session(user): ${user.get().nickname}</li>
+            <li>Session(user): ${user.nickname}</li>
             <li><a href="<c:url value="/user/signout" />">로그아웃</a></li>
         </c:otherwise>
     </c:choose>
