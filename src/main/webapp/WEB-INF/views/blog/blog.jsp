@@ -34,10 +34,11 @@
     <h3>nickname: ${bloger.get().nickname}</h3>
     <h3>email: ${bloger.get().email}</h3>
     <h3>registered: ${bloger.get().registerDate}</h3>
+
     <h3>category list</h3>
-    <ul>
+    <ul id="category-list">
         <c:forEach items="${categories}" var="category">
-            <li>CategoryNo: ${category.get().categoryNo} | Category: ${category.get().category}</li>
+            <li><a href="<c:url value="/${user.get().nickname}/${category.get().categoryNo}" />">${category.get().category}</a></li>
         </c:forEach>
     </ul>
 
@@ -46,6 +47,12 @@
     <c:choose>
         <c:when test="${user.get().userNo eq bloger.get().userNo }">
             <form action="<c:url value="/${user.get().nickname}/write" />" method="POST">
+                <label for="category">Select Category</label>
+                <select name="categoryNo" id="category">
+                    <c:forEach items="${categories}" var="category">
+                        <option value="${category.get().categoryNo}">${category.get().category}</option>
+                    </c:forEach>
+                </select><br>
                 <label for="post-title">title: </label>
                 <input id="post-title" type="text" name="postTitle" value=""><br>
                 <label for="post-body">body: </label>
