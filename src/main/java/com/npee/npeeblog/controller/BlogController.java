@@ -6,8 +6,11 @@ import com.npee.npeeblog.model.entity.Post;
 import com.npee.npeeblog.model.entity.User;
 import com.npee.npeeblog.model.repository.BlogJpaRepository;
 import com.npee.npeeblog.model.repository.CategoryJpaRepository;
+import com.npee.npeeblog.model.repository.PostJpaRepository;
 import com.npee.npeeblog.model.repository.UserJpaRepository;
 import com.npee.npeeblog.service.BlogServiceImpl;
+import com.npee.npeeblog.service.UserService;
+import com.npee.npeeblog.service.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -26,6 +29,8 @@ public class BlogController {
     private final UserJpaRepository userJpaRepository;
     private final BlogJpaRepository blogJpaRepository;
     private final CategoryJpaRepository categoryJpaRepository;
+    private final PostJpaRepository postJpaRepository;
+    private final UserServiceImpl userService;
     private final BlogServiceImpl blogService;
 
     @GetMapping
@@ -33,17 +38,23 @@ public class BlogController {
         // PathVariable에 해당하는 nickname을 가진 User의 블로그 정보로
         // 세션의 내용을 모두 교체한 후 페이지를 불러온다
 
-        // Optional<User> bloger = userJpaRepository.findByUserPk_Nickname(nickname);
-        Optional<User> bloger = userJpaRepository.findByNickname(nickname);
-        session.setAttribute("bloger", bloger);
+        Optional<User> bloger;
+        Optional<Blog> blog;
+        Optional<List<Category>> categories;
+        Optional<List<Post>> posts;
 
+        bloger = userJpaRepository.findByNickname(nickname);
         if (bloger.isPresent()) {
-            // Optional<Blog> blog = blogJpaRepository.findByBlogNo(bloger.get().getBlogTable().getBlogNo());
-            Optional<Blog> blog = blogJpaRepository.findByBlogNo(bloger.get().getUserNo());
-            session.setAttribute("blog", blog);
+            session.setAttribute("bloger", bloger.get());
 
-            List<Optional<Category>> categories = categoryJpaRepository.findAllByBlogTable_BlogNo(blog.get().getBlogNo());
-            session.setAttribute("categories", categories);
+            blog = blogJpaRepository.findByBlogNo(bloger.get().getUserNo());
+            blog.ifPresent(myblog -> session.setAttribute("blog", myblog));
+
+            if (blog.isPresent()) {
+                categories = categoryJpaRepository.findAllByCategoryFromBlog_BlogNo(blog.get().getBlogNo());
+                categories.ifPresent(myCategories -> session.setAttribute("categories", myCategories));
+
+            }
         }
 
         return "blog/blog";
@@ -56,19 +67,51 @@ public class BlogController {
                         @RequestParam String postBody,
                         HttpSession session) {
 
+        // TODO: 방어코드 작성
         Category category = categoryJpaRepository.findById(categoryNo).get();
-        Post post = blogService.builder(category, postTitle, postBody);
+        Blog blog = blogJpaRepository.findByBlogFromUser_Nickname(nickname).get();
+        Post newPost = blogService.builder(category, blog, postTitle, postBody);
 
         // log.debug("New Post Created: " + post.toString());
 
-        session.setAttribute("post", post);
+        session.setAttribute("newPost", newPost);
 
         return "blog/blog";
     }
 
-    @GetMapping("/{post}")
-    public String read(@PathVariable Long post, HttpSession session) {
+    @GetMapping("/{postNo}")
+    public String read(@PathVariable String nickname, @PathVariable Long postNo, HttpSession session) {
+
+//        if (session.getAttribute("user") == null) {
+//            User user = userService.builder("anonymous", "admin", "anonymous");
+//            session.setAttribute("user", user);
+//        }
+        log.debug("nickname: " + nickname);
+
+        // TODO: 방어코드 작성
+        Post post = postJpaRepository.findByPostNo(postNo).get();
+        Blog blog = blogJpaRepository.findByBlogFromUser_Nickname(nickname).get();
+        User bloger = userJpaRepository.findByNickname(nickname).get();
+
+        Long currentBlogNo = post.getPostFromBlog().getBlogNo();
+        Long blogNoOfCurrentPost = blog.getBlogFromUser().getUserNo();
+
+        if (currentBlogNo.equals(blogNoOfCurrentPost)) {
+            // Long blogNo = ((Blog) session.getAttribute("blog")).getBlogNo();
+
+            Long count = post.getCount();
+            post.setCount(++count);
+
+            // Long categoryNo = post.getCategoryTable().getCategoryNo();
+            // String categoryName = categoryJpaRepository.findByCategoryNo(categoryNo).get().getCategory();
+            String categoryName = post.getPostFromCategory().getCategory();
+            session.setAttribute("bloger", bloger);
+            session.setAttribute("post", post);
+            session.setAttribute("categoryName", categoryName);
+            postJpaRepository.save(post);
+        }
 
         return "blog/post";
     }
+
 }
