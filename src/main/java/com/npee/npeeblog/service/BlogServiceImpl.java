@@ -25,7 +25,7 @@ public class BlogServiceImpl implements BlogService, CategoryService, PostServic
     @Override
     public Blog builder(User user, String nickname) {
         return blogJpaRepository.save(Blog.builder()
-                .userTable(user)
+                .blogFromUser(user)
                 .title(nickname + "의 블로그")
                 .image("default url")
                 .count(0L)
@@ -37,15 +37,16 @@ public class BlogServiceImpl implements BlogService, CategoryService, PostServic
     @Override
     public Category builder(Blog blog, String category) {
         return categoryJpaRepository.save(Category.builder()
-                .blogTable(blog)
+                .categoryFromBlog(blog)
                 .category(category)
                 .build());
     }
 
     @Override
-    public Post builder(Category category, String postTitle, String postBody) {
+    public Post builder(Category category, Blog blog, String postTitle, String postBody) {
         return postJpaRepository.save(Post.builder()
-                .categoryTable(category)
+                .postFromCategory(category)
+                .postFromBlog(blog)
                 .title(postTitle)
                 .body(postBody)
                 .count(0L)
