@@ -108,7 +108,7 @@ public class UserController {
          * 로그인 성공 시 사용자 정보를 세션에 등록
          * TODO: 로그인 예외 방어 코드 작성(orElseThrow() 메서드?)
          */
-        Optional<User> user = userJpaRepository.findByEmailAndPassword(email, password);
+        User user = userJpaRepository.findByEmailAndPassword(email, password).get();
         session.setAttribute("user", user);
 
         /**
