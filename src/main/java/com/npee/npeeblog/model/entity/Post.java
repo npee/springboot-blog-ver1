@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 @Entity
 @Getter
+@Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,10 +40,17 @@ public class Post {
     @Column(nullable = false, updatable = true)
     private LocalDateTime modifyDate;
 
-    @OneToMany(mappedBy = "postTable")
+    @OneToMany(mappedBy = "replyFromPost")
     private List<Reply> replies;
 
     @ManyToOne
     @JoinColumn(name = "CATEGORY_NO")
-    private Category categoryTable;
+    private Category postFromCategory;
+
+    @ManyToOne
+    @JoinColumn(name = "BLOG_NO")
+    private Blog postFromBlog;
+
+
+
 }

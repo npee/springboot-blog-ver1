@@ -36,9 +36,12 @@ public class Blog {
 
     @OneToOne
     @JoinColumn(name = "USER_NO")
-    private User userTable;
+    private User blogFromUser;
 
-    @OneToMany(mappedBy = "blogTable")
+    @OneToMany(mappedBy = "categoryFromBlog")
     private List<Category> categories;
+
+    @OneToMany(mappedBy = "postFromBlog")
+    private List<Post> posts;
 
 }
