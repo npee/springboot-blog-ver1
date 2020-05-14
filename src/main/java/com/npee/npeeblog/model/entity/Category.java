@@ -23,10 +23,10 @@ public class Category {
     @Column
     private String description;
 
-    @OneToMany(mappedBy = "categoryTable")
+    @OneToMany(mappedBy = "postFromCategory")
     private List<Post> posts;
 
     @ManyToOne
     @JoinColumn(name = "BLOG_NO")
-    private Blog blogTable;
+    private Blog categoryFromBlog;
 }

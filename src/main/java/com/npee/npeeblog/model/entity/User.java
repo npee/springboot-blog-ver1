@@ -23,7 +23,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String nickname;
 
-    @Email
+    // @Email
     @Column(nullable = false, unique = true, length = 50)
     private String email;
 
@@ -34,6 +34,6 @@ public class User {
     @Column(nullable = false, updatable = false)
     private LocalDateTime registerDate;
 
-    @OneToOne(mappedBy = "userTable")
-    private Blog blogTable;
+    @OneToOne(mappedBy = "blogFromUser")
+    private Blog userFromBlog;
 }

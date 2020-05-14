@@ -28,5 +28,5 @@ public class Reply {
 
     @ManyToOne
     @JoinColumn(name = "POST_NO")
-    private Category postTable;
+    private Post replyFromPost;
 }
