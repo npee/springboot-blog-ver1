@@ -29,4 +29,9 @@ public class Reply {
     @ManyToOne
     @JoinColumn(name = "POST_NO")
     private Post replyFromPost;
+
+    @ManyToOne
+    @JoinColumn(name = "USER_NO")
+    private User replyFromUser;
+
 }

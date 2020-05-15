@@ -4,8 +4,8 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Entity
@@ -36,4 +36,7 @@ public class User {
 
     @OneToOne(mappedBy = "blogFromUser")
     private Blog userFromBlog;
+
+    @OneToMany(mappedBy = "replyFromUser")
+    private List<Reply> replies;
 }
