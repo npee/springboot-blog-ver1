@@ -62,6 +62,11 @@ public class BlogController {
         return "blog/blog";
     }
 
+    @GetMapping("/write")
+    public String write_page() {
+        return "blog/write";
+    }
+
     @PostMapping("/write")
     public String write(@PathVariable String nickname,
                         @RequestParam Long categoryNo,
@@ -74,11 +79,11 @@ public class BlogController {
         Blog blog = blogJpaRepository.findByBlogFromUser_Nickname(nickname).get();
         Post newPost = blogService.builder(category, blog, postTitle, postBody);
 
-        // log.debug("New Post Created: " + post.toString());
-
         session.setAttribute("newPost", newPost);
 
-        return "blog/blog";
+        // TODO: 작성한 글로 리다이렉트
+        String postRedirectUrl = nickname + "/" + newPost.getPostNo();
+        return "redirect:/" + postRedirectUrl;
     }
 
     @GetMapping("/{postNo}")
