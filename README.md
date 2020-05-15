@@ -1,7 +1,10 @@
 # springboot-blog
 ## Summary
 ## Update
-
+### 2020.05.15
+### 2020.05.14
+* Update code(JpaRepository Optional<List> to List<Optional)
+* Create post writing function
 ### 2020.05.10
 * Update blogs table(Change Primary key strategy)
 ### 2020.05.09
