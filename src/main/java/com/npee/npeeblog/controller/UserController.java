@@ -49,7 +49,7 @@ public class UserController {
 
         User tempUser = userService.builder(email, password, nickname);
         Blog tempBlog = blogService.builder(tempUser, nickname);
-        blogService.builder(tempBlog, "sample_category");
+        blogService.builder(tempBlog);
 
         log.debug("회원가입 성공!");
         log.debug(tempUser.toString());
