@@ -136,7 +136,12 @@ public class BlogController {
                                  HttpSession session) {
 
         Blog blog = (Blog) session.getAttribute("blog");
-        blogService.builder(blog, categoryName, categoryDescription);
+        if (categoryDescription == null || categoryDescription.equals("")) {
+            blogService.builder(blog, categoryName);
+        } else {
+            blogService.builder(blog, categoryName, categoryDescription);
+        }
+
         return "redirect:/" + nickname;
     }
 
