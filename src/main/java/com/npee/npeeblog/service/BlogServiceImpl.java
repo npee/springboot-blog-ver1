@@ -36,7 +36,7 @@ public class BlogServiceImpl implements BlogService, CategoryService, PostServic
 
     @Override
     public Category builder(Blog blog) {
-        return builder(blog, "샘플 카테고리", "카테고리에 대한 설명을 작성해주세요.");
+        return builder(blog, "샘플 카테고리");
     }
 
     @Override
