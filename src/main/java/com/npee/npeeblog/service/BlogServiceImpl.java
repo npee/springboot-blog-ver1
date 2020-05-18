@@ -43,6 +43,15 @@ public class BlogServiceImpl implements BlogService, CategoryService, PostServic
     }
 
     @Override
+    public Category builder(Blog blog, String category, String description) {
+        return categoryJpaRepository.save(Category.builder()
+                .categoryFromBlog(blog)
+                .category(category)
+                .description(description)
+                .build());
+    }
+
+    @Override
     public Post builder(Category category, Blog blog, String postTitle, String postBody) {
         return postJpaRepository.save(Post.builder()
                 .postFromCategory(category)

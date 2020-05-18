@@ -31,6 +31,15 @@
         </c:when>
         <c:when test="${user.userNo eq bloger.userNo }">
             <h2>user: author</h2>
+            <h3>새 카테고리</h3>
+            <form action="<c:url value="/${user.nickname}/category" />" method="POST">
+                <label for="categoryName">카테고리 이름</label>
+                <input type="text" id="categoryName" name="categoryName" placeholder="카테고리 이름"><br>
+                <label for="categoryDescription">카테고리 설명(선택)</label>
+                <input type="text" id="categoryDescription" name="categoryDescription" placeholder="카테고리 설명"><br>
+                <input type="submit" id="create-new-category" name="createNewCategory" value="카테고리 생성">
+            </form>
+            <h3>글쓰기</h3>
             <a href="/${user.nickname}/write">글쓰기</a>
         </c:when>
         <c:otherwise>
