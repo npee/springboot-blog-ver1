@@ -1,7 +1,9 @@
 # springboot-blog
 ## Summary
 ## Update
+### 2020.05.16
 ### 2020.05.15
+* Create view(write post)
 ### 2020.05.14
 * Update code(JpaRepository Optional<List> to List<Optional)
 * Create post writing function
