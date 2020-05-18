@@ -35,11 +35,13 @@ public class BlogServiceImpl implements BlogService, CategoryService, PostServic
     }
 
     @Override
+    public Category builder(Blog blog) {
+        return builder(blog, "샘플 카테고리", "카테고리에 대한 설명을 작성해주세요.");
+    }
+
+    @Override
     public Category builder(Blog blog, String category) {
-        return categoryJpaRepository.save(Category.builder()
-                .categoryFromBlog(blog)
-                .category(category)
-                .build());
+        return builder(blog, category, "카테고리에 대한 설명을 작성해주세요.");
     }
 
     @Override
