@@ -113,11 +113,9 @@ public class BlogController {
 
             // Long categoryNo = post.getCategoryTable().getCategoryNo();
             // String categoryName = categoryJpaRepository.findByCategoryNo(categoryNo).get().getCategory();
-            String categoryName = post.getPostFromCategory().getCategory();
             session.setAttribute("bloger", bloger);
             session.setAttribute("posts", posts);
             session.setAttribute("post", post);
-            session.setAttribute("categoryName", categoryName);
             postJpaRepository.save(post);
         }
 

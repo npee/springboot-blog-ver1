@@ -22,20 +22,6 @@
     <body>
         <c:import url="/WEB-INF/views/common/header.jsp" />
         <h1>body</h1>
-        <c:choose>
-            <c:when test="${empty user}">
-                <h2>user: empty</h2>
-                <h3>${bloger.userNo}</h3>
-            </c:when>
-            <c:when test="${user.userNo eq bloger.userNo }">
-                <h2>user: author</h2>
-                <h3>${user.userNo}, ${bloger.userNo}</h3>
-            </c:when>
-            <c:otherwise>
-                <h2>user: guest(${user.nickname})</h2>
-                <h3>${user.userNo}, ${bloger.userNo}</h3>
-            </c:otherwise>
-        </c:choose>
 
         <h2>post</h2>
         <c:choose>
@@ -72,10 +58,36 @@
         <fmt:formatDate value="${registerLDT}" pattern="yyyy년 MM월 dd일" var="postRegisterDate" />
         <fmt:formatDate value="${modifyLDT}" pattern="yyyy년 MM월 dd일" var="postModifyDate" />
         <!-- READ A POST -->
+        <!-- FIX -->
+
         <h1>${post.title}</h1>
         <p>Created: ${postRegisterDate}, Modified: ${postModifyDate}, count: ${post.count}</p>
-        <h2>${categoryName}</h2>
+        <h2>${post.postFromCategory.category}</h2>
         <p>${post.body}</p>
+        <c:choose>
+            <c:when test="${empty user}">
+                <h2>Guest(Anonymous)</h2>
+                <h3>${bloger.userNo}</h3>
+            </c:when>
+            <c:when test="${user.userNo eq bloger.userNo }">
+                <h2>Autherized user</h2>
+                <h3>${user.userNo}, ${bloger.userNo}</h3>
+<%--                <form action="<c:url value="/${user.nickname}/write" />">--%>
+<%--                    <input type="hidden" name="categoryName" value="${categoryName}" >--%>
+<%--                    <input type="submit" value="수정">--%>
+<%--                </form>--%>
+            </c:when>
+            <c:otherwise>
+                <h2>Guest(${user.nickname})</h2>
+                <h3>${user.userNo}, ${bloger.userNo}</h3>
+<%--                <form action="<c:url value="/${user.nickname}/write" />" method="POST">--%>
+
+<%--                </form>--%>
+            </c:otherwise>
+        </c:choose>
+
+
+
 
 <%--        <form action="<c:url value="/${user.get().nickname}/${category.get().categoryNo}" />" method="POST">--%>
 <%--        </form>--%>
