@@ -72,10 +72,9 @@
             <c:when test="${user.userNo eq bloger.userNo }">
                 <h2>Autherized user</h2>
                 <h3>${user.userNo}, ${bloger.userNo}</h3>
-<%--                <form action="<c:url value="/${user.nickname}/write" />">--%>
-<%--                    <input type="hidden" name="categoryName" value="${categoryName}" >--%>
-<%--                    <input type="submit" value="수정">--%>
-<%--                </form>--%>
+                <form action="<c:url value="/${user.nickname}/update" />" method="GET">
+                    <input type="submit" value="수정">
+                </form>
             </c:when>
             <c:otherwise>
                 <h2>Guest(${user.nickname})</h2>
