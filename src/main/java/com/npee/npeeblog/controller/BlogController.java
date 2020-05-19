@@ -100,9 +100,11 @@ public class BlogController {
         return "redirect:/" + postRedirectUrl;
     }
 
-
-
-
+    @GetMapping("/update")
+    public String update_page() {
+        return "blog/write";
+    }
+    
     @GetMapping("/{postNo}")
     public String read(@PathVariable String nickname, @PathVariable Long postNo, HttpSession session) {
 
