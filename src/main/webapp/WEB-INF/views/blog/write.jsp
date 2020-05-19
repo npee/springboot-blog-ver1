@@ -43,7 +43,15 @@
                     <input id="post-title" type="text" name="postTitle" value="${post.title}"><br>
                     <label for="post-body">body: </label>
                     <input id="post-body" type="text" name="postBody" value="${post.body}"><br>
-                    <button id="post-submit" type="submit">submit</button>
+                    <c:choose>
+                        <c:when test="${empty post.postFromCategory}">
+                            <button id="post-write" type="submit">작성 완료</button>
+                        </c:when>
+                        <c:otherwise>
+                            <button id="post-update" type="submit">수정 완료</button>
+                        </c:otherwise>
+                    </c:choose>
+
                 </form>
             </c:when>
             <c:otherwise>
