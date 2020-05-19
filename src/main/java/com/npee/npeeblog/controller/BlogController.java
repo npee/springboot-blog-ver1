@@ -92,8 +92,8 @@ public class BlogController {
         return "redirect:/" + postRedirectUrl;
     }
 
-    @GetMapping("/update")
-    public String update_page() {
+    @GetMapping("/update-post")
+    public String update_post() {
         return "blog/write";
     }
 
@@ -126,7 +126,15 @@ public class BlogController {
             postJpaRepository.save(post);
         }
 
+        // TODO: 댓글 리스트 보기
+
         return "blog/post";
+    }
+
+    @PostMapping("/delete-post")
+    public String delete_post(@PathVariable String nickname) {
+        // TODO: 포스트 삭제 - 수정 페이지에 포함 / 관련 댓글 모두 삭제됨
+        return "redirect:/";
     }
 
     @GetMapping("/categories")
@@ -148,6 +156,43 @@ public class BlogController {
         }
 
         return "redirect:/" + nickname;
+    }
+
+    @GetMapping("/settings")
+    public String blog_settings(@PathVariable String nickname) {
+        // TODO: 블로그 프로필 수정 - view 작업 직전
+        return "settings/blog-settings";
+    }
+
+    @PostMapping("/update-category")
+    public String update_category(@PathVariable String nickname) {
+        // TODO: 카테고리 수정
+        return "redirect:/" + nickname + "/settings";
+    }
+
+    @PostMapping("/delete-category")
+    public String delete_category(@PathVariable String nickname) {
+        // TODO: 카테고리 삭제 - 하위 포스트 개수가 0이어야 함
+        return "redirect:/" + nickname + "/settings";
+    }
+
+    @PostMapping("/create-reply")
+    public String create_category(@PathVariable String nickname) {
+        // TODO: 댓글 생성
+        return "redirect:/" + nickname + "/settings";
+    }
+
+    @PostMapping("/update-reply")
+    public String update_reply(@PathVariable String nickname) {
+        // TODO: 댓글 수정 - 권한: 댓글 작성자
+        // TODO: 댓글 가리기 - 권한: 블로그 관리자
+        return "redirect:/" + nickname + "/settings";
+    }
+
+    @PostMapping("/delete-reply")
+    public String delete_reply(@PathVariable String nickname) {
+        // TODO: 댓글 삭제 - 권한: 댓글 작성자
+        return "redirect:/" + nickname + "/settings";
     }
 
 }

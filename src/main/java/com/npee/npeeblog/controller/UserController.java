@@ -130,4 +130,10 @@ public class UserController {
         session.invalidate();
         return "/sign/signout";
     }
+
+    // TODO: 사용자 정보 수정
+    @GetMapping("/settings")
+    public String user_settings() {
+        return "settings/user-settings";
+    }
 }

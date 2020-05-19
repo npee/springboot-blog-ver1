@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%--@elvariable id="user" type="User"--%>
 <header>
     <h1>header</h1>
     <c:choose>
@@ -16,6 +17,9 @@
         </c:when>
         <c:otherwise>
             <li>Session(user): ${user.nickname}</li>
+            <li><a href="<c:url value="/user/settings" />">사용자 설정</a></li>
+            <li><a href="<c:url value="/${user.nickname}" />">내 블로그</a></li>
+            <li><a href="<c:url value="/${user.nickname}/settings" />">블로그 설정</a></li>
             <li><a href="<c:url value="/user/signout" />">로그아웃</a></li>
         </c:otherwise>
     </c:choose>
