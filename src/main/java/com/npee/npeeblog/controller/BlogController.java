@@ -92,14 +92,8 @@ public class BlogController {
         // TODO: 방어코드 작성
         Category category = categoryJpaRepository.findById(categoryNo).get();
         Blog blog = blogJpaRepository.findByBlogFromUser_Nickname(nickname).get();
+        Post post = postJpaRepository.save(blogService.builder(postNo, category, blog, postTitle, postBody));
 
-        Post post;
-        if (postNo.equals(0L)) {
-            // 새 글 작성일 때
-            post = postJpaRepository.save(blogService.builder(category, blog, postTitle, postBody));
-        } else {
-            post = postJpaRepository.save(blogService.builder(postNo, category, blog, postTitle, postBody));
-        }
         session.setAttribute("newPost", post);
 
         String postRedirectUrl = nickname + "/" + post.getPostNo();
