@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,7 +64,20 @@ public class BlogController {
     }
 
     @GetMapping("/write")
-    public String write_page() {
+    public String write_page(HttpSession session) {
+        session.removeAttribute("post");
+        Blog blog = (Blog) session.getAttribute("blog");
+        // Post post = blogService.builder(null, blog, "글쓰기", "");
+        Post post = Post.builder()
+                .postFromCategory(null)
+                .postFromBlog(blog)
+                .title("placeholder")
+                .body("placeholder")
+                .count(0L)
+                .registerDate(LocalDateTime.now().plusHours(9L))
+                .modifyDate(LocalDateTime.now().plusHours(9L))
+                .build();
+        session.setAttribute("post", post);
         return "blog/write";
     }
 
@@ -86,6 +100,9 @@ public class BlogController {
         return "redirect:/" + postRedirectUrl;
     }
 
+
+
+
     @GetMapping("/{postNo}")
     public String read(@PathVariable String nickname, @PathVariable Long postNo, HttpSession session) {
 
@@ -93,6 +110,8 @@ public class BlogController {
 //            User user = userService.builder("anonymous", "admin", "anonymous");
 //            session.setAttribute("user", user);
 //        }
+        session.removeAttribute("post");
+
         log.debug("nickname: " + nickname);
 
         // TODO: 방어코드 작성
