@@ -71,8 +71,8 @@ public class BlogController {
         Post post = Post.builder()
                 .postFromCategory(null)
                 .postFromBlog(blog)
-                .title("placeholder")
-                .body("placeholder")
+                .title("")
+                .body("")
                 .count(0L)
                 .registerDate(LocalDateTime.now().plusHours(9L))
                 .modifyDate(LocalDateTime.now().plusHours(9L))
@@ -104,7 +104,7 @@ public class BlogController {
     public String update_page() {
         return "blog/write";
     }
-    
+
     @GetMapping("/{postNo}")
     public String read(@PathVariable String nickname, @PathVariable Long postNo, HttpSession session) {
 
@@ -113,8 +113,6 @@ public class BlogController {
 //            session.setAttribute("user", user);
 //        }
         session.removeAttribute("post");
-
-        log.debug("nickname: " + nickname);
 
         // TODO: 방어코드 작성
         Post post = postJpaRepository.findByPostNo(postNo).get();
