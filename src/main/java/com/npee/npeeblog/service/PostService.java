@@ -6,4 +6,5 @@ import com.npee.npeeblog.model.entity.Post;
 
 public interface PostService {
     Post builder(Category category, Blog blog, String postTitle, String postBody);
+    Post builder(Long postNo, Category category, Blog blog, String postTitle, String postBody);
 }

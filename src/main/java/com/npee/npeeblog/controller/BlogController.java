@@ -83,6 +83,7 @@ public class BlogController {
 
     @PostMapping("/write")
     public String write(@PathVariable String nickname,
+                        @RequestParam Long postNo,
                         @RequestParam Long categoryNo,
                         @RequestParam String postTitle,
                         @RequestParam String postBody,
@@ -91,12 +92,17 @@ public class BlogController {
         // TODO: 방어코드 작성
         Category category = categoryJpaRepository.findById(categoryNo).get();
         Blog blog = blogJpaRepository.findByBlogFromUser_Nickname(nickname).get();
-        Post newPost = blogService.builder(category, blog, postTitle, postBody);
 
-        session.setAttribute("newPost", newPost);
+        Post post;
+        if (postNo.equals(0L)) {
+            // 새 글 작성일 때
+            post = postJpaRepository.save(blogService.builder(category, blog, postTitle, postBody));
+        } else {
+            post = postJpaRepository.save(blogService.builder(postNo, category, blog, postTitle, postBody));
+        }
+        session.setAttribute("newPost", post);
 
-        // TODO: 작성한 글로 리다이렉트
-        String postRedirectUrl = nickname + "/" + newPost.getPostNo();
+        String postRedirectUrl = nickname + "/" + post.getPostNo();
         return "redirect:/" + postRedirectUrl;
     }
 

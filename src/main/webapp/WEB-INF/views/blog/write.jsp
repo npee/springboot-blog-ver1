@@ -45,9 +45,11 @@
                     <input id="post-body" type="text" name="postBody" value="${post.body}"><br>
                     <c:choose>
                         <c:when test="${empty post.postFromCategory}">
+                            <input type="hidden" name="postNo" value="0">
                             <button id="post-write" type="submit">작성 완료</button>
                         </c:when>
                         <c:otherwise>
+                            <input type="hidden" name="postNo" value="${post.postNo}">
                             <button id="post-update" type="submit">수정 완료</button>
                         </c:otherwise>
                     </c:choose>

@@ -55,7 +55,7 @@ public class BlogServiceImpl implements BlogService, CategoryService, PostServic
 
     @Override
     public Post builder(Category category, Blog blog, String postTitle, String postBody) {
-        return postJpaRepository.save(Post.builder()
+        return Post.builder()
                 .postFromCategory(category)
                 .postFromBlog(blog)
                 .title(postTitle)
@@ -64,6 +64,21 @@ public class BlogServiceImpl implements BlogService, CategoryService, PostServic
                 // 빈 댓글 리스트가 필요할까?
                 .registerDate(LocalDateTime.now().plusHours(9L))
                 .modifyDate(LocalDateTime.now().plusHours(9L))
-                .build());
+                .build();
+    }
+
+    @Override
+    public Post builder(Long postNo, Category category, Blog blog, String postTitle, String postBody) {
+        return Post.builder()
+                .postNo(postNo)
+                .postFromCategory(category)
+                .postFromBlog(blog)
+                .title(postTitle)
+                .body(postBody)
+                .count(0L)
+                // 빈 댓글 리스트가 필요할까?
+                .registerDate(LocalDateTime.now().plusHours(9L))
+                .modifyDate(LocalDateTime.now().plusHours(9L))
+                .build();
     }
 }
