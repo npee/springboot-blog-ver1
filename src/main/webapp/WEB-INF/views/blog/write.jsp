@@ -13,6 +13,7 @@
 <%--@elvariable id="blog" type="Blog"--%>
 <%--@elvariable id="categories" type="List<Category>>"--%>
 <%--@elvariable id="posts" type="List<Post>>"--%>
+<%--@elvariable id="post" type="Post"--%>
 <html>
     <head>
         <title>Title</title>
@@ -28,13 +29,20 @@
                     <label for="category">Select Category</label>
                     <select name="categoryNo" id="category">
                         <c:forEach items="${categories}" var="category">
-                            <option value="${category.categoryNo}">${category.category}</option>
+                            <c:choose>
+                                <c:when test="${category.categoryNo eq post.postFromCategory.categoryNo }">
+                                    <option value="${category.categoryNo}" selected="selected">${category.category}</option>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="${category.categoryNo}">${category.category}</option>
+                                </c:otherwise>
+                            </c:choose>
                         </c:forEach>
                     </select><br>
                     <label for="post-title">title: </label>
-                    <input id="post-title" type="text" name="postTitle" value=""><br>
+                    <input id="post-title" type="text" name="postTitle" value="${post.title}"><br>
                     <label for="post-body">body: </label>
-                    <input id="post-body" type="text" name="postBody" value=""><br>
+                    <input id="post-body" type="text" name="postBody" value="${post.body}"><br>
                     <button id="post-submit" type="submit">submit</button>
                 </form>
             </c:when>
