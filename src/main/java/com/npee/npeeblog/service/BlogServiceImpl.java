@@ -4,9 +4,6 @@ import com.npee.npeeblog.model.entity.Blog;
 import com.npee.npeeblog.model.entity.Category;
 import com.npee.npeeblog.model.entity.Post;
 import com.npee.npeeblog.model.entity.User;
-import com.npee.npeeblog.model.repository.BlogJpaRepository;
-import com.npee.npeeblog.model.repository.CategoryJpaRepository;
-import com.npee.npeeblog.model.repository.PostJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,20 +15,16 @@ import java.time.LocalDateTime;
 @Slf4j
 public class BlogServiceImpl implements BlogService, CategoryService, PostService{
 
-    private final BlogJpaRepository blogJpaRepository;
-    private final CategoryJpaRepository categoryJpaRepository;
-    private final PostJpaRepository postJpaRepository;
-
     @Override
     public Blog builder(User user, String nickname) {
-        return blogJpaRepository.save(Blog.builder()
+        return Blog.builder()
                 .blogFromUser(user)
                 .title(nickname + "의 블로그")
                 .image("default url")
                 .count(0L)
                 .registerDate(LocalDateTime.now().plusHours(9L))
                 .blogNo(user.getUserNo())
-                .build());
+                .build();
     }
 
     @Override
@@ -46,11 +39,11 @@ public class BlogServiceImpl implements BlogService, CategoryService, PostServic
 
     @Override
     public Category builder(Blog blog, String category, String description) {
-        return categoryJpaRepository.save(Category.builder()
+        return Category.builder()
                 .categoryFromBlog(blog)
                 .category(category)
                 .description(description)
-                .build());
+                .build();
     }
 
 

@@ -67,16 +67,8 @@ public class BlogController {
     public String write_page(HttpSession session) {
         session.removeAttribute("post");
         Blog blog = (Blog) session.getAttribute("blog");
-        // Post post = blogService.builder(null, blog, "글쓰기", "");
-        Post post = Post.builder()
-                .postFromCategory(null)
-                .postFromBlog(blog)
-                .title("")
-                .body("")
-                .count(0L)
-                .registerDate(LocalDateTime.now().plusHours(9L))
-                .modifyDate(LocalDateTime.now().plusHours(9L))
-                .build();
+        Post post = blogService.builder(0L, null, blog, "", "");
+
         session.setAttribute("post", post);
         return "blog/write";
     }
@@ -108,10 +100,6 @@ public class BlogController {
     @GetMapping("/{postNo}")
     public String read(@PathVariable String nickname, @PathVariable Long postNo, HttpSession session) {
 
-//        if (session.getAttribute("user") == null) {
-//            User user = userService.builder("anonymous", "admin", "anonymous");
-//            session.setAttribute("user", user);
-//        }
         session.removeAttribute("post");
 
         // TODO: 방어코드 작성
@@ -154,9 +142,9 @@ public class BlogController {
 
         Blog blog = (Blog) session.getAttribute("blog");
         if (categoryDescription == null || categoryDescription.equals("")) {
-            blogService.builder(blog, categoryName);
+            categoryJpaRepository.save(blogService.builder(blog, categoryName));
         } else {
-            blogService.builder(blog, categoryName, categoryDescription);
+            categoryJpaRepository.save(blogService.builder(blog, categoryName, categoryDescription));
         }
 
         return "redirect:/" + nickname;

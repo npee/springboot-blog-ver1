@@ -2,6 +2,8 @@ package com.npee.npeeblog.controller;
 
 import com.npee.npeeblog.model.entity.Blog;
 import com.npee.npeeblog.model.entity.User;
+import com.npee.npeeblog.model.repository.BlogJpaRepository;
+import com.npee.npeeblog.model.repository.CategoryJpaRepository;
 import com.npee.npeeblog.model.repository.UserJpaRepository;
 import com.npee.npeeblog.service.BlogServiceImpl;
 import com.npee.npeeblog.service.UserServiceImpl;
@@ -21,6 +23,8 @@ import java.util.Optional;
 public class UserController {
 
     private final UserJpaRepository userJpaRepository;
+    private final BlogJpaRepository blogJpaRepository;
+    private final CategoryJpaRepository categoryJpaRepository;
     private final UserServiceImpl userService;
     private final BlogServiceImpl blogService;
 
@@ -47,9 +51,9 @@ public class UserController {
             return "redirect:/";
         }
 
-        User tempUser = userService.builder(email, password, nickname);
-        Blog tempBlog = blogService.builder(tempUser, nickname);
-        blogService.builder(tempBlog);
+        User tempUser = userJpaRepository.save(userService.builder(email, password, nickname));
+        Blog tempBlog = blogJpaRepository.save(blogService.builder(tempUser, nickname));
+        categoryJpaRepository.save(blogService.builder(tempBlog));
 
         log.debug("회원가입 성공!");
         log.debug(tempUser.toString());

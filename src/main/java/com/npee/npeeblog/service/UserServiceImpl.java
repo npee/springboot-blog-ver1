@@ -15,19 +15,17 @@ import java.util.Date;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-    private final UserJpaRepository userJpaRepository;
-
     Date date = new Date();
     SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
     String now = format.format(date);
 
     @Override
     public User builder(String email, String password, String nickname) {
-        return userJpaRepository.save(User.builder()
+        return User.builder()
                 .email(email)
                 .password(password)
                 .nickname(nickname)
                 .registerDate(LocalDateTime.now().plusHours(9L))
-                .build());
+                .build();
     }
 }
