@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,6 +36,12 @@ public class BlogController {
     private final UserServiceImpl userService;
     private final BlogServiceImpl blogService;
 
+    /**
+     * 추가되는 세션 정보 : bloger, blog, categories, posts
+     * @param nickname
+     * @param session
+     * @return MVC View "blog/blog"
+     */
     @GetMapping
     public String blogMain(@PathVariable String nickname, HttpSession session) {
         // PathVariable에 해당하는 nickname을 가진 User의 블로그 정보로
@@ -158,10 +166,62 @@ public class BlogController {
         return "redirect:/" + nickname;
     }
 
+    /**
+     * 추가되는 세션 정보 : bloger, blog, categories, posts
+     * @param nickname
+     * @param session
+     * @return MVC View "settings/blog-settings"
+     */
     @GetMapping("/settings")
-    public String blog_settings(@PathVariable String nickname) {
+    public String blog_settings(@PathVariable String nickname,
+                                HttpSession session,
+                                HttpServletRequest request,
+                                HttpServletResponse response) {
         // TODO: 블로그 프로필 수정 - view 작업 직전
+
+        // TODO: 중복 코드 리팩토링
+        Optional<User> bloger;
+        Optional<Blog> blog;
+        Optional<List<Category>> categories;
+        Optional<List<Post>> posts;
+
+        bloger = userJpaRepository.findByNickname(nickname);
+        if (bloger.isPresent()) {
+            session.setAttribute("bloger", bloger.get());
+
+            blog = blogJpaRepository.findByBlogNo(bloger.get().getUserNo());
+            blog.ifPresent(myblog -> session.setAttribute("blog", myblog));
+
+            if (blog.isPresent()) {
+                categories = categoryJpaRepository.findAllByCategoryFromBlog_BlogNo(blog.get().getBlogNo());
+                categories.ifPresent(myCategories -> session.setAttribute("categories", myCategories));
+
+                posts = postJpaRepository.findAllByPostFromBlog_BlogNo(blog.get().getBlogNo());
+                posts.ifPresent(myPosts -> session.setAttribute("posts", myPosts));
+            }
+        }
+
+        // Long categoryNo = (Long) session.getAttribute("categoryNo");
+        String categoryNoFromRequestParameter = request.getParameter("categoryNo");
+        long categoryNo;
+        if (categoryNoFromRequestParameter == null) {
+             categoryNo = 0L;
+        } else {
+            categoryNo = Long.parseLong(categoryNoFromRequestParameter);
+        }
+
+        Category selectedCategory = Category.builder().categoryNo(categoryNo).category("tempCategory").build();
+
+        log.debug("Selected categoryNo: " + categoryNo);
+        session.setAttribute("selectedCategory", selectedCategory);
+
         return "settings/blog-settings";
+    }
+
+    @PostMapping("/settings")
+    public String post_settings(@PathVariable String nickname, HttpSession session) {
+
+        return "redirect:/" + nickname + "/settings";
     }
 
     @PostMapping("/update-category")
