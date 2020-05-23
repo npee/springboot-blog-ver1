@@ -201,20 +201,6 @@ public class BlogController {
             }
         }
 
-        // Long categoryNo = (Long) session.getAttribute("categoryNo");
-        String categoryNoFromRequestParameter = request.getParameter("categoryNo");
-        long categoryNo;
-        if (categoryNoFromRequestParameter == null) {
-             categoryNo = 0L;
-        } else {
-            categoryNo = Long.parseLong(categoryNoFromRequestParameter);
-        }
-
-        Category selectedCategory = Category.builder().categoryNo(categoryNo).category("tempCategory").build();
-
-        log.debug("Selected categoryNo: " + categoryNo);
-        session.setAttribute("selectedCategory", selectedCategory);
-
         return "settings/blog-settings";
     }
 
