@@ -96,8 +96,7 @@ public class BlogController {
 
         session.setAttribute("newPost", post);
 
-        String postRedirectUrl = nickname + "/" + post.getPostNo();
-        return "redirect:/" + postRedirectUrl;
+        return setRedirectUrl(nickname, post.getPostNo());
     }
 
     @GetMapping("/update-post")
@@ -142,7 +141,7 @@ public class BlogController {
     @PostMapping("/delete-post")
     public String delete_post(@PathVariable String nickname) {
         // TODO: 포스트 삭제 - 수정 페이지에 포함 / 관련 댓글 모두 삭제됨
-        return "redirect:/";
+        return setRedirectUrl();
     }
 
     @GetMapping("/categories")
@@ -163,8 +162,8 @@ public class BlogController {
             categoryJpaRepository.save(blogService.builder(blog, categoryName, categoryDescription));
         }
 
-        String redirectUrlAfterCreateCategory = nickname + "/settings";
-        return "redirect:/" + redirectUrlAfterCreateCategory;
+
+        return setRedirectUrl(nickname, "settings");
     }
 
     /**
@@ -208,38 +207,57 @@ public class BlogController {
     @PostMapping("/settings")
     public String post_settings(@PathVariable String nickname, HttpSession session) {
 
-        return "redirect:/" + nickname + "/settings";
+        return setRedirectUrl(nickname, "settings");
     }
 
     @PostMapping("/update-category")
-    public String update_category(@PathVariable String nickname) {
+    public String update_category(@PathVariable String nickname,
+                                  @RequestParam String categoryName,
+                                  @RequestParam String categoryDescription,
+                                  HttpSession session) {
         // TODO: 카테고리 수정
-        return "redirect:/" + nickname + "/settings";
+        return setRedirectUrl(nickname, "settings");
     }
 
     @PostMapping("/delete-category")
     public String delete_category(@PathVariable String nickname) {
         // TODO: 카테고리 삭제 - 하위 포스트 개수가 0이어야 함
-        return "redirect:/" + nickname + "/settings";
+        return setRedirectUrl(nickname, "settings");
     }
 
     @PostMapping("/create-reply")
     public String create_category(@PathVariable String nickname) {
         // TODO: 댓글 생성
-        return "redirect:/" + nickname + "/settings";
+        return setRedirectUrl(nickname, "settings");
     }
 
     @PostMapping("/update-reply")
     public String update_reply(@PathVariable String nickname) {
         // TODO: 댓글 수정 - 권한: 댓글 작성자
         // TODO: 댓글 가리기 - 권한: 블로그 관리자
-        return "redirect:/" + nickname + "/settings";
+        return setRedirectUrl(nickname, "settings");
     }
 
     @PostMapping("/delete-reply")
     public String delete_reply(@PathVariable String nickname) {
         // TODO: 댓글 삭제 - 권한: 댓글 작성자
-        return "redirect:/" + nickname + "/settings";
+        return setRedirectUrl(nickname, "settings");
+    }
+
+    private static String setRedirectUrl() {
+        return "redirect:/";
+    }
+
+    private static String setRedirectUrl(String nickname) {
+        return setRedirectUrl() + nickname;
+    }
+
+    private static String setRedirectUrl(String nickname, String controller) {
+        return setRedirectUrl(nickname) + "/" + controller;
+    }
+
+    private static String setRedirectUrl(String nickname, Long postNo) {
+        return setRedirectUrl(nickname) + "/" + postNo;
     }
 
 }
