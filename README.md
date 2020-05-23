@@ -1,7 +1,14 @@
 # springboot-blog
 ## Summary
 ## Update
-### 2020.05.16
+### 2020.05.24
+* Create function(Delete a selected category)
+* Create function(Update a selected category)
+### 2020.05.19
+* Update View(Create/update post)
+* Update BlogController(Create/update post)
+### 2020.05.18
+* Update CategoryService(overloading builder)
 ### 2020.05.15
 * Create view(write post)
 ### 2020.05.14
