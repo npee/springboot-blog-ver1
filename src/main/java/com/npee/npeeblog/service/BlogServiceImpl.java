@@ -39,13 +39,18 @@ public class BlogServiceImpl implements BlogService, CategoryService, PostServic
 
     @Override
     public Category builder(Blog blog, String category, String description) {
+        return builder(blog, null, category, description);
+    }
+
+    @Override
+    public Category builder(Blog blog, Long categoryNo, String category, String description) {
         return Category.builder()
+                .categoryNo(categoryNo)
                 .categoryFromBlog(blog)
                 .category(category)
                 .description(description)
                 .build();
     }
-
 
     @Override
     public Post builder(Long postNo, Category category, Blog blog, String postTitle, String postBody) {

@@ -54,6 +54,7 @@
                 <c:if test="${(category.categoryNo - param.categoryNo) eq 0}">
                     <h3>카테고리 수정 폼</h3>
                     <form action="<c:url value="/${user.nickname}/update-category" />" method="POST">
+                        <input type="hidden" name="updateCategoryNo" value="${param.categoryNo}">
                         <label for="update-category-name">카테고리 이름</label>
                         <input type="text" id="update-category-name" name="categoryName" value="${category.category}"><br>
                         <label for="update-category-description">카테고리 설명(선택)</label>
@@ -63,7 +64,7 @@
                 </c:if>
             </c:forEach>
         </c:if>
-        <h2><a href="<c:url value="/${user.nickname}/settings?categoryNo=0&isDeleteCategory=true" />">카테고리 생성</a></h2>
+        <h2><a href="<c:url value="/${user.nickname}/settings?categoryNo=0&isDeleteCategory=true" />">카테고리 삭제</a></h2>
         <c:choose>
             <c:when test="${param.isDeleteCategory eq true}">
                 <h3>TRUE</h3>

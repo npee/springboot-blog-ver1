@@ -162,7 +162,6 @@ public class BlogController {
             categoryJpaRepository.save(blogService.builder(blog, categoryName, categoryDescription));
         }
 
-
         return setRedirectUrl(nickname, "settings");
     }
 
@@ -212,10 +211,14 @@ public class BlogController {
 
     @PostMapping("/update-category")
     public String update_category(@PathVariable String nickname,
+                                  @RequestParam Long updateCategoryNo,
                                   @RequestParam String categoryName,
                                   @RequestParam String categoryDescription,
                                   HttpSession session) {
-        // TODO: 카테고리 수정
+
+        Blog blog = (Blog) session.getAttribute("blog");
+        categoryJpaRepository.save(blogService.builder(blog, updateCategoryNo, categoryName, categoryDescription));
+
         return setRedirectUrl(nickname, "settings");
     }
 
