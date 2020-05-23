@@ -34,7 +34,7 @@
                     <input type="text" id="categoryName" name="categoryName" placeholder="카테고리 이름"><br>
                     <label for="categoryDescription">카테고리 설명(선택)</label>
                     <input type="text" id="categoryDescription" name="categoryDescription" placeholder="카테고리 설명"><br>
-                    <input type="submit" id="create-new-category" value="생성">
+                    <input type="submit" id="create-category" value="생성">
                 </form>
             </c:when>
             <c:otherwise>
@@ -68,6 +68,16 @@
         <c:choose>
             <c:when test="${param.isDeleteCategory eq true}">
                 <h3>TRUE</h3>
+                <h3>카테고리 삭제 폼</h3>
+                <form action="<c:url value="/${user.nickname}/delete-category" />" method="POST">
+                    <label for="category-selectbox">Select Category</label>
+                    <select name="deleteCategoryNo" id="category-selectbox">
+                        <c:forEach items="${categories}" var="category">
+                            <option value="${category.categoryNo}">${category.category}</option>
+                        </c:forEach>
+                    </select><br>
+                    <input type="submit" id="delete-category" value="삭제">
+                </form>
             </c:when>
             <c:otherwise>
                 <h3>FALSE</h3>

@@ -223,8 +223,18 @@ public class BlogController {
     }
 
     @PostMapping("/delete-category")
-    public String delete_category(@PathVariable String nickname) {
-        // TODO: 카테고리 삭제 - 하위 포스트 개수가 0이어야 함
+    public String delete_category(@PathVariable String nickname,
+                                  @RequestParam Long deleteCategoryNo) {
+
+        Optional<List<Post>> postList = postJpaRepository.findAllByPostFromCategory_CategoryNo(deleteCategoryNo);
+        log.debug("postList is Empty?: " + !postList.isPresent());
+        if (postList.isPresent()) {
+            // TODO: View에서 경고 메시지 출력하도록 변경하기
+            log.error("카테고리에 포스트가 존재하면 카테고리를 삭제할 수 없습니다...");
+        } else {
+            categoryJpaRepository.deleteByCategoryNo(deleteCategoryNo);
+        }
+
         return setRedirectUrl(nickname, "settings");
     }
 

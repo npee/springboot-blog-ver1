@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface PostJpaRepository extends JpaRepository<Post, Long> {
     Optional<Post> findByPostNo(Long postNo);
     Optional<List<Post>> findAllByPostFromBlog_BlogNo(Long blogNo);
+    Optional<List<Post>> findAllByPostFromCategory_CategoryNo(Long categoryNo);
 }
