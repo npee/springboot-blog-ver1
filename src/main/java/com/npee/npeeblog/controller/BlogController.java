@@ -163,7 +163,8 @@ public class BlogController {
             categoryJpaRepository.save(blogService.builder(blog, categoryName, categoryDescription));
         }
 
-        return "redirect:/" + nickname;
+        String redirectUrlAfterCreateCategory = nickname + "/settings";
+        return "redirect:/" + redirectUrlAfterCreateCategory;
     }
 
     /**
