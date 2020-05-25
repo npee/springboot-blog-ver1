@@ -2,6 +2,7 @@ package com.npee.npeeblog.model.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,6 +26,10 @@ public class Reply {
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime registerDate;
+
+    @LastModifiedDate
+    @Column(nullable = false)
+    private LocalDateTime modifyDate;
 
     @ManyToOne
     @JoinColumn(name = "POST_NO")

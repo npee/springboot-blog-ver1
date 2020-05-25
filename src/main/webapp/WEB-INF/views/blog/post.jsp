@@ -198,13 +198,26 @@
                                 </c:when>
                                 <c:when test="${param.isUpdateReply eq true}">
                                     <p>댓글 수정 폼</p>
+                                    <c:if test="${not empty param.updateReplyNo}">
+                                        <form action="<c:url value="/${bloger.nickname}/${post.postNo}/update-reply" />" method="POST">
+                                            <c:forEach items="${replies}" var="reply">
+                                                <c:if test="${reply.replyNo eq param.updateReplyNo and reply.replyFromUser.userNo eq user.userNo}">
+                                                    <label>내용:</label>
+                                                    <input type="hidden" name="userNo" value="${user.userNo}">
+                                                    <input type="hidden" name="replyNo" value="${reply.replyNo}">
+                                                    <input type="text" name="updatedReply" value="${reply.reply}"><br>
+                                                    <input type="submit" value="수정 완료">
+                                                </c:if>
+                                            </c:forEach>
+                                        </form>
+                                    </c:if>
                                     <c:forEach items="${replies}" var="reply">
-                                        <form action="<c:url value="/${bloger.nickname}/${post.postNo}/update-reply" />" method="POST"></form>
                                         <c:choose>
                                             <c:when test="${user.userNo eq reply.replyFromUser.userNo}">
                                                 <li>
                                                     <p>작성자: ${reply.replyFromUser.nickname}</p>
                                                     <p>내용: ${reply.reply}</p>
+                                                    <a href="<c:url value="/${bloger.nickname}/${post.postNo}?isUpdateReply=true&updateReplyNo=${reply.replyNo}" />">수정하기</a>
                                                 </li>
                                             </c:when>
                                             <c:otherwise>
@@ -214,7 +227,6 @@
                                                 </li>
                                             </c:otherwise>
                                         </c:choose>
-
                                     </c:forEach>
                                 </c:when>
                                 <c:when test="${param.isDeleteReply eq true}">

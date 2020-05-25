@@ -244,11 +244,12 @@ public class BlogController {
                                   @RequestParam Long userNo,
                                   @PathVariable Long postNo,
                                   @RequestParam String newReply) {
-        // TODO: 댓글 생성
+        // TODO: 댓글 생성...ReplyService interface로 옮기기
         replyJpaRepository.save(
             Reply.builder()
                     .reply(newReply)
                     .registerDate(LocalDateTime.now().plusHours(9L))
+                    .modifyDate(LocalDateTime.now().plusHours(9L))
                     .replyFromPost(postJpaRepository.findByPostNo(postNo).get())
                     .replyFromUser(userJpaRepository.findByUserNo(userNo).get())
                     .build()
@@ -256,17 +257,35 @@ public class BlogController {
         return setRedirectUrl(nickname, postNo);
     }
 
-    @PostMapping("/update-reply")
-    public String update_reply(@PathVariable String nickname) {
+    @PostMapping("/{postNo}/update-reply")
+    public String update_reply(@PathVariable String nickname,
+                               @RequestParam Long userNo,
+                               @PathVariable Long postNo,
+                               @RequestParam Long replyNo,
+                               @RequestParam String updatedReply) {
         // TODO: 댓글 수정 - 권한: 댓글 작성자
+        log.debug("userNo: " + userNo);
+        log.debug("postNo: " + postNo);
+        log.debug("updatedReply: " + updatedReply);
+        replyJpaRepository.save(
+                Reply.builder()
+                        .replyNo(replyNo)
+                        .reply(updatedReply)
+                        .modifyDate(LocalDateTime.now().plusHours(9L))
+                        .replyFromPost(postJpaRepository.findByPostNo(postNo).get())
+                        .replyFromUser(userJpaRepository.findByUserNo(userNo).get())
+                        .build()
+        );
         // TODO: 댓글 가리기 - 권한: 블로그 관리자
-        return setRedirectUrl(nickname, "settings");
+        return setRedirectUrl(nickname, postNo);
     }
 
-    @PostMapping("/delete-reply")
-    public String delete_reply(@PathVariable String nickname) {
+    @PostMapping("/{postNo}/delete-reply")
+    public String delete_reply(@PathVariable String nickname,
+                               @RequestParam Long userNo,
+                               @PathVariable Long postNo) {
         // TODO: 댓글 삭제 - 권한: 댓글 작성자
-        return setRedirectUrl(nickname, "settings");
+        return setRedirectUrl(nickname, postNo);
     }
 
     private static String setRedirectUrl() {
