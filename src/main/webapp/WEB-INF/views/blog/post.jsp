@@ -66,63 +66,163 @@
         <p>Created: ${postRegisterDate}, Modified: ${postModifyDate}, count: ${post.count}</p>
         <h2>카테고리: ${post.postFromCategory.category}</h2>
         <p>내용: ${post.body}</p>
+        <%-- 수정 버튼(작성자 권한) --%>
+        <c:if test="${user.userNo eq bloger.userNo }">
+            <a href="<c:url value="/${user.nickname}/update-post" />">포스트 수정</a>
+        </c:if>
         <%-- 댓글 --%>
+        <h3>댓글</h3>
+        <a href="<c:url value="/${bloger.nickname}/${post.postNo}?isCreateReply=true&isUpdateReply=false&isDeleteReply=false" />">댓글 작성하기</a>
+        <a href="<c:url value="/${bloger.nickname}/${post.postNo}?isCreateReply=false&isUpdateReply=true&isDeleteReply=false" />">댓글 수정하기</a>
+        <a href="<c:url value="/${bloger.nickname}/${post.postNo}?isCreateReply=false&isUpdateReply=false&isDeleteReply=true" />">댓글 삭제하기</a>
         <c:choose>
             <c:when test="${empty user}">
                 <h2>Author: Guest(Anonymous)</h2>
                 <h3>Bloger: ${bloger.userNo}</h3>
+                <p>로그인후 댓글을 작성할 수 있습니다.</p>
             </c:when>
             <c:when test="${user.userNo eq bloger.userNo }">
                 <h2>Author: Bloger(permitAll)</h2>
                 <h3>${user.userNo}, ${bloger.userNo}</h3>
-                <a href="<c:url value="/${user.nickname}/update-post" />">포스트 수정</a>
-                <h3>댓글</h3>
 
-                <h4>댓글 작성하기(내 블로그)</h4>
-                <%-- 댓글 작성 폼 --%>
-                <form action="<c:url value="/${user.nickname}/create-reply" />" method="POST">
-                    <input type="hidden" name="postNo" value="${post.postNo}">
-                    <input type="hidden" name="userNo" value="${user.userNo}">
-                    <label for="bloger-reply">댓글: </label>
-                    <input type="text" name="newReply" id="bloger-reply"><br>
-                    <input type="submit" value="댓글 작성">
-                </form>
+                <c:if test="${param.isCreateReply eq true}">
+                    <h4>댓글 작성하기(내 포스트)</h4>
+                    <%-- 댓글 작성 폼 --%>
+                    <form action="<c:url value="/${user.nickname}/create-reply" />" method="POST">
+                        <input type="hidden" name="postNo" value="${post.postNo}">
+                        <input type="hidden" name="userNo" value="${user.userNo}">
+                        <label for="bloger-reply">댓글: </label>
+                        <input type="text" name="newReply" id="bloger-reply"><br>
+                        <input type="submit" value="댓글 작성">
+                    </form>
+                </c:if>
 
             </c:when>
             <c:otherwise>
                 <h2>Author: Guest(${user.nickname})</h2>
                 <h3>${user.userNo}, ${bloger.userNo}</h3>
-                <h3>댓글</h3>
-                <h4>댓글 작성하기(${bloger.nickname}의 블로그)</h4>
-                <%-- 댓글 작성 폼 --%>
-                <form action="<c:url value="/${user.nickname}/create-reply" />" method="POST">
-                    <input type="hidden" name="postNo" value="${post.postNo}">
-                    <input type="hidden" name="userNo" value="${user.userNo}">
-                    <label for="guest-reply">댓글: </label>
-                    <input type="text" name="newReply" id="guest-reply"><br>
-                    <input type="submit" value="댓글 작성">
-                </form>
+
+                <c:if test="${param.isCreateReply eq true}">
+                    <h4>댓글 작성하기(${bloger.nickname}의 포스트)</h4>
+                    <%-- 댓글 작성 폼 --%>
+                    <form action="<c:url value="/${user.nickname}/create-reply" />" method="POST">
+                        <input type="hidden" name="postNo" value="${post.postNo}">
+                        <input type="hidden" name="userNo" value="${user.userNo}">
+                        <label for="guest-reply">댓글: </label>
+                        <input type="text" name="newReply" id="guest-reply"><br>
+                        <input type="submit" value="댓글 작성">
+                    </form>
+                </c:if>
+
             </c:otherwise>
         </c:choose>
+
         <h4>댓글 목록</h4>
-        <%-- 댓글 리스트 출력--%>
+        <%-- 댓글 리스트 출력 & 수정, 삭제--%>
         <c:choose>
-            <c:when test="${empty replies}">
-                <ul>
-                    <li>${emptyReplyMessage}</li>
-                </ul>
+            <c:when test="${empty user}">
+                <c:choose>
+                    <c:when test="${empty replies}">
+                        <ul>
+                            <li>${emptyReplyMessage}</li>
+                        </ul>
+                    </c:when>
+                    <c:otherwise>
+                        <ul>
+                            <c:forEach items="${replies}" var="reply">
+                                <li>
+                                    <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                    <p>내용: ${reply.reply}</p>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </c:otherwise>
+                </c:choose>
+            </c:when>
+            <c:when test="${user.userNo eq bloger.userNo }">
+                <c:choose>
+                    <c:when test="${empty replies}">
+                        <ul>
+                            <li>${emptyReplyMessage}</li>
+                        </ul>
+                    </c:when>
+                    <c:otherwise>
+                        <ul>
+                            <c:choose>
+                                <c:when test="${param.isCreateReply eq true or empty param}">
+                                    <c:forEach items="${replies}" var="reply">
+                                        <li>
+                                            <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                            <p>내용: ${reply.reply}</p>
+                                        </li>
+                                    </c:forEach>
+                                </c:when>
+                                <c:when test="${param.isUpdateReply eq true}">
+                                    <p>댓글 수정 폼</p>
+                                    <c:forEach items="${replies}" var="reply">
+                                        <li>
+                                            <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                            <p>내용: ${reply.reply}</p>
+                                        </li>
+                                    </c:forEach>
+                                </c:when>
+                                <c:when test="${param.isDeleteReply eq true}">
+                                    <p>댓글 삭제 폼</p>
+                                    <c:forEach items="${replies}" var="reply">
+                                        <li>
+                                            <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                            <p>내용: ${reply.reply}</p>
+                                        </li>
+                                    </c:forEach>
+                                </c:when>
+                            </c:choose>
+                        </ul>
+                    </c:otherwise>
+                </c:choose>
             </c:when>
             <c:otherwise>
-                <ul>
-                    <c:forEach items="${replies}" var="reply">
-                        <li>
-                            <p>작성자: ${reply.replyFromUser.nickname}</p>
-                            <p>내용: ${reply.reply}</p>
-                        </li>
-                    </c:forEach>
-                </ul>
+                <c:choose>
+                    <c:when test="${empty replies}">
+                        <ul>
+                            <li>${emptyReplyMessage}</li>
+                        </ul>
+                    </c:when>
+                    <c:otherwise>
+                        <ul>
+                            <c:choose>
+                                <c:when test="${param.isCreateReply eq true or empty param}">
+                                    <c:forEach items="${replies}" var="reply">
+                                        <li>
+                                            <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                            <p>내용: ${reply.reply}</p>
+                                        </li>
+                                    </c:forEach>
+                                </c:when>
+                                <c:when test="${param.isUpdateReply eq true}">
+                                    <p>댓글 수정 폼</p>
+                                    <c:forEach items="${replies}" var="reply">
+                                        <li>
+                                            <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                            <p>내용: ${reply.reply}</p>
+                                        </li>
+                                    </c:forEach>
+                                </c:when>
+                                <c:when test="${param.isDeleteReply eq true}">
+                                    <p>댓글 삭제 폼</p>
+                                    <c:forEach items="${replies}" var="reply">
+                                        <li>
+                                            <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                            <p>내용: ${reply.reply}</p>
+                                        </li>
+                                    </c:forEach>
+                                </c:when>
+                            </c:choose>
+                        </ul>
+                    </c:otherwise>
+                </c:choose>
             </c:otherwise>
         </c:choose>
+
         <c:import url="/WEB-INF/views/common/footer.jsp" />
     </body>
 </html>
