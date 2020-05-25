@@ -126,7 +126,7 @@ public class BlogController {
             session.setAttribute("post", post);
             postJpaRepository.save(post);
         }
-        
+
         Optional<List<Reply>> replyList = replyJpaRepository.findAllByReplyFromPost_PostNo(postNo);
         List<Reply> replies;
         if (replyList.isPresent()) {
@@ -239,10 +239,10 @@ public class BlogController {
         return setRedirectUrl(nickname, "settings");
     }
 
-    @PostMapping("/create-reply")
+    @PostMapping("/{postNo}/create-reply")
     public String create_category(@PathVariable String nickname,
                                   @RequestParam Long userNo,
-                                  @RequestParam Long postNo,
+                                  @PathVariable Long postNo,
                                   @RequestParam String newReply) {
         // TODO: 댓글 생성
         replyJpaRepository.save(

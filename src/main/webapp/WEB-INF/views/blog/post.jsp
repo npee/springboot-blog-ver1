@@ -88,8 +88,7 @@
                 <c:if test="${param.isCreateReply eq true}">
                     <h4>댓글 작성하기(내 포스트)</h4>
                     <%-- 댓글 작성 폼 --%>
-                    <form action="<c:url value="/${user.nickname}/create-reply" />" method="POST">
-                        <input type="hidden" name="postNo" value="${post.postNo}">
+                    <form action="<c:url value="/${user.nickname}/${post.postNo}/create-reply" />" method="POST">
                         <input type="hidden" name="userNo" value="${user.userNo}">
                         <label for="bloger-reply">댓글: </label>
                         <input type="text" name="newReply" id="bloger-reply"><br>
@@ -105,8 +104,7 @@
                 <c:if test="${param.isCreateReply eq true}">
                     <h4>댓글 작성하기(${bloger.nickname}의 포스트)</h4>
                     <%-- 댓글 작성 폼 --%>
-                    <form action="<c:url value="/${user.nickname}/create-reply" />" method="POST">
-                        <input type="hidden" name="postNo" value="${post.postNo}">
+                    <form action="<c:url value="/${user.nickname}/${post.postNo}/create-reply" />" method="POST">
                         <input type="hidden" name="userNo" value="${user.userNo}">
                         <label for="guest-reply">댓글: </label>
                         <input type="text" name="newReply" id="guest-reply"><br>
@@ -201,10 +199,22 @@
                                 <c:when test="${param.isUpdateReply eq true}">
                                     <p>댓글 수정 폼</p>
                                     <c:forEach items="${replies}" var="reply">
-                                        <li>
-                                            <p>작성자: ${reply.replyFromUser.nickname}</p>
-                                            <p>내용: ${reply.reply}</p>
-                                        </li>
+                                        <form action="<c:url value="/${bloger.nickname}/${post.postNo}/update-reply" />" method="POST"></form>
+                                        <c:choose>
+                                            <c:when test="${user.userNo eq reply.replyFromUser.userNo}">
+                                                <li>
+                                                    <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                                    <p>내용: ${reply.reply}</p>
+                                                </li>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <li>
+                                                    <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                                    <p>내용: ${reply.reply}</p>
+                                                </li>
+                                            </c:otherwise>
+                                        </c:choose>
+
                                     </c:forEach>
                                 </c:when>
                                 <c:when test="${param.isDeleteReply eq true}">
