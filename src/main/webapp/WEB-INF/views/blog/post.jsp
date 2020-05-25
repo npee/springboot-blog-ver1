@@ -59,35 +59,44 @@
         <fmt:formatDate value="${modifyLDT}" pattern="yyyy년 MM월 dd일" var="postModifyDate" />
         <!-- READ A POST -->
         <!-- FIX -->
-
-        <h1>${post.title}</h1>
+        <h1>포스트</h1>
+        <h2>제목: ${post.title}</h2>
         <p>Created: ${postRegisterDate}, Modified: ${postModifyDate}, count: ${post.count}</p>
-        <h2>${post.postFromCategory.category}</h2>
-        <p>${post.body}</p>
+        <h2>카테고리: ${post.postFromCategory.category}</h2>
+        <p>내용: ${post.body}</p>
         <c:choose>
             <c:when test="${empty user}">
-                <h2>Guest(Anonymous)</h2>
-                <h3>${bloger.userNo}</h3>
+                <h2>Author: Guest(Anonymous)</h2>
+                <h3>Bloger: ${bloger.userNo}</h3>
             </c:when>
             <c:when test="${user.userNo eq bloger.userNo }">
-                <h2>Autherized user</h2>
+                <h2>Author: Bloger(permitAll)</h2>
                 <h3>${user.userNo}, ${bloger.userNo}</h3>
                 <a href="<c:url value="/${user.nickname}/update-post" />">포스트 수정</a>
+                <h3>댓글</h3>
+                <h4>댓글 작성하기</h4>
+                <%-- 댓글 작성 폼 --%>
+                <h4>댓글 목록</h4>
+                <%-- 댓글 리스트 출력--%>
             </c:when>
             <c:otherwise>
-                <h2>Guest(${user.nickname})</h2>
+                <h2>Author: Guest(${user.nickname})</h2>
                 <h3>${user.userNo}, ${bloger.userNo}</h3>
-<%--                <form action="<c:url value="/${user.nickname}/write" />" method="POST">--%>
+                <h3>댓글</h3>
+                <h4>댓글 작성하기</h4>
+                <%-- 댓글 작성 폼 --%>
+                <form action="<c:url value="/${user.nickname}/create-reply" />" method="POST">
+                    <input type="hidden" name="postNo" value="${post.postNo}">
+                    <input type="hidden" name="userNo" value="${user.userNo}">
+                    <label for="form-reply">댓글: </label>
+                    <input type="text" name="newReply" id="form-reply"><br>
+                    <input type="submit" value="댓글 작성">
+                </form>
+                <h4>댓글 목록</h4>
+                <%-- 댓글 리스트 출력--%>
 
-<%--                </form>--%>
             </c:otherwise>
         </c:choose>
-
-
-
-
-<%--        <form action="<c:url value="/${user.get().nickname}/${category.get().categoryNo}" />" method="POST">--%>
-<%--        </form>--%>
 
         <c:import url="/WEB-INF/views/common/footer.jsp" />
     </body>

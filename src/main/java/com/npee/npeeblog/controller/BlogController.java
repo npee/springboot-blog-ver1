@@ -1,13 +1,7 @@
 package com.npee.npeeblog.controller;
 
-import com.npee.npeeblog.model.entity.Blog;
-import com.npee.npeeblog.model.entity.Category;
-import com.npee.npeeblog.model.entity.Post;
-import com.npee.npeeblog.model.entity.User;
-import com.npee.npeeblog.model.repository.BlogJpaRepository;
-import com.npee.npeeblog.model.repository.CategoryJpaRepository;
-import com.npee.npeeblog.model.repository.PostJpaRepository;
-import com.npee.npeeblog.model.repository.UserJpaRepository;
+import com.npee.npeeblog.model.entity.*;
+import com.npee.npeeblog.model.repository.*;
 import com.npee.npeeblog.service.BlogServiceImpl;
 import com.npee.npeeblog.service.UserService;
 import com.npee.npeeblog.service.UserServiceImpl;
@@ -33,7 +27,8 @@ public class BlogController {
     private final BlogJpaRepository blogJpaRepository;
     private final CategoryJpaRepository categoryJpaRepository;
     private final PostJpaRepository postJpaRepository;
-    private final UserServiceImpl userService;
+    private final ReplyJpaRepository replyJpaRepository;
+    // private final UserServiceImpl userService;
     private final BlogServiceImpl blogService;
 
     /**
@@ -239,9 +234,20 @@ public class BlogController {
     }
 
     @PostMapping("/create-reply")
-    public String create_category(@PathVariable String nickname) {
+    public String create_category(@PathVariable String nickname,
+                                  @RequestParam Long userNo,
+                                  @RequestParam Long postNo,
+                                  @RequestParam String newReply) {
         // TODO: 댓글 생성
-        return setRedirectUrl(nickname, "settings");
+        replyJpaRepository.save(
+            Reply.builder()
+                    .reply(newReply)
+                    .registerDate(LocalDateTime.now().plusHours(9L))
+                    .replyFromPost(postJpaRepository.findByPostNo(postNo).get())
+                    .replyFromUser(userJpaRepository.findByUserNo(userNo).get())
+                    .build()
+        );
+        return setRedirectUrl(nickname, postNo);
     }
 
     @PostMapping("/update-reply")
