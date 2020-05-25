@@ -19,6 +19,8 @@
     <%--@elvariable id="post" type="Post"--%>
     <%--@elvariable id="posts" type="List<Post>"--%>
     <%--@elvariable id="categoryName" type="String"--%>
+    <%--@elvariable id="replies" type="List<Reply>"--%>
+    <%--@elvariable id="emptyReplyMessage" type="String"--%>
     <body>
         <c:import url="/WEB-INF/views/common/header.jsp" />
         <h1>body</h1>
@@ -68,33 +70,92 @@
             <c:when test="${empty user}">
                 <h2>Author: Guest(Anonymous)</h2>
                 <h3>Bloger: ${bloger.userNo}</h3>
+                <h4>댓글 목록</h4>
+                <%-- 댓글 리스트 출력--%>
+                <c:choose>
+                    <c:when test="${empty replies}">
+                        <ul>
+                            <li>${emptyReplyMessage}</li>
+                        </ul>
+                    </c:when>
+                    <c:otherwise>
+                        <ul>
+                            <c:forEach items="${replies}" var="reply">
+                                <li>
+                                    <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                    <p>내용: ${reply.reply}</p>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </c:otherwise>
+                </c:choose>
             </c:when>
             <c:when test="${user.userNo eq bloger.userNo }">
                 <h2>Author: Bloger(permitAll)</h2>
                 <h3>${user.userNo}, ${bloger.userNo}</h3>
                 <a href="<c:url value="/${user.nickname}/update-post" />">포스트 수정</a>
                 <h3>댓글</h3>
-                <h4>댓글 작성하기</h4>
+                <h4>댓글 작성하기(내 블로그)</h4>
                 <%-- 댓글 작성 폼 --%>
+                <form action="<c:url value="/${user.nickname}/create-reply" />" method="POST">
+                    <input type="hidden" name="postNo" value="${post.postNo}">
+                    <input type="hidden" name="userNo" value="${user.userNo}">
+                    <label for="bloger-reply">댓글: </label>
+                    <input type="text" name="newReply" id="bloger-reply"><br>
+                    <input type="submit" value="댓글 작성">
+                </form>
                 <h4>댓글 목록</h4>
                 <%-- 댓글 리스트 출력--%>
+                <c:choose>
+                    <c:when test="${empty replies}">
+                        <ul>
+                            <li>${emptyReplyMessage}</li>
+                        </ul>
+                    </c:when>
+                    <c:otherwise>
+                        <ul>
+                            <c:forEach items="${replies}" var="reply">
+                                <li>
+                                    <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                    <p>내용: ${reply.reply}</p>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </c:otherwise>
+                </c:choose>
             </c:when>
             <c:otherwise>
                 <h2>Author: Guest(${user.nickname})</h2>
                 <h3>${user.userNo}, ${bloger.userNo}</h3>
                 <h3>댓글</h3>
-                <h4>댓글 작성하기</h4>
+                <h4>댓글 작성하기(${bloger.nickname}의 블로그)</h4>
                 <%-- 댓글 작성 폼 --%>
                 <form action="<c:url value="/${user.nickname}/create-reply" />" method="POST">
                     <input type="hidden" name="postNo" value="${post.postNo}">
                     <input type="hidden" name="userNo" value="${user.userNo}">
-                    <label for="form-reply">댓글: </label>
-                    <input type="text" name="newReply" id="form-reply"><br>
+                    <label for="guest-reply">댓글: </label>
+                    <input type="text" name="newReply" id="guest-reply"><br>
                     <input type="submit" value="댓글 작성">
                 </form>
                 <h4>댓글 목록</h4>
                 <%-- 댓글 리스트 출력--%>
-
+                <c:choose>
+                    <c:when test="${empty replies}">
+                        <ul>
+                            <li>${emptyReplyMessage}</li>
+                        </ul>
+                    </c:when>
+                    <c:otherwise>
+                        <ul>
+                            <c:forEach items="${replies}" var="reply">
+                                <li>
+                                    <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                    <p>내용: ${reply.reply}</p>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </c:otherwise>
+                </c:choose>
             </c:otherwise>
         </c:choose>
 

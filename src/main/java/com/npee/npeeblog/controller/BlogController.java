@@ -116,7 +116,6 @@ public class BlogController {
 
         if (currentBlogNo.equals(blogNoOfCurrentPost)) {
             // Long blogNo = ((Blog) session.getAttribute("blog")).getBlogNo();
-
             Long count = post.getCount();
             post.setCount(++count);
 
@@ -127,8 +126,15 @@ public class BlogController {
             session.setAttribute("post", post);
             postJpaRepository.save(post);
         }
-
-        // TODO: 댓글 리스트 보기
+        
+        Optional<List<Reply>> replyList = replyJpaRepository.findAllByReplyFromPost_PostNo(postNo);
+        List<Reply> replies;
+        if (replyList.isPresent()) {
+            replies = replyList.get();
+            session.setAttribute("replies", replies);
+        } else {
+            session.setAttribute("emptyReplyMessage", "작성된 댓글이 없습니다.");
+        }
 
         return "blog/post";
     }
