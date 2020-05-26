@@ -23,6 +23,9 @@ public class Reply {
     @Column(nullable = false)
     private String reply;
 
+    @Column(nullable = false)
+    private String isBlind;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime registerDate;

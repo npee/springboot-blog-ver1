@@ -100,7 +100,9 @@ public class BlogController {
     }
 
     @GetMapping("/{postNo}")
-    public String read(@PathVariable String nickname, @PathVariable Long postNo, HttpSession session) {
+    public String read(@PathVariable String nickname,
+                       @PathVariable Long postNo,
+                       HttpSession session) {
 
         session.removeAttribute("post");
 
@@ -121,9 +123,6 @@ public class BlogController {
 
             // Long categoryNo = post.getCategoryTable().getCategoryNo();
             // String categoryName = categoryJpaRepository.findByCategoryNo(categoryNo).get().getCategory();
-            session.setAttribute("bloger", bloger);
-            session.setAttribute("posts", posts);
-            session.setAttribute("post", post);
             postJpaRepository.save(post);
         }
 
@@ -132,9 +131,14 @@ public class BlogController {
         if (replyList.isPresent()) {
             replies = replyList.get();
             session.setAttribute("replies", replies);
+
         } else {
             session.setAttribute("emptyReplyMessage", "작성된 댓글이 없습니다.");
         }
+
+        session.setAttribute("bloger", bloger);
+        session.setAttribute("posts", posts);
+        session.setAttribute("post", post);
 
         return "blog/post";
     }
@@ -248,6 +252,7 @@ public class BlogController {
         replyJpaRepository.save(
             Reply.builder()
                     .reply(newReply)
+                    .isBlind("false")
                     .registerDate(LocalDateTime.now().plusHours(9L))
                     .modifyDate(LocalDateTime.now().plusHours(9L))
                     .replyFromPost(postJpaRepository.findByPostNo(postNo).get())
@@ -262,21 +267,61 @@ public class BlogController {
                                @RequestParam Long userNo,
                                @PathVariable Long postNo,
                                @RequestParam Long replyNo,
+                               @RequestParam(required = false) String isBlind,
                                @RequestParam String updatedReply) {
-        // TODO: 댓글 수정 - 권한: 댓글 작성자
+
+        log.debug("isBlind: " + isBlind);
         log.debug("userNo: " + userNo);
         log.debug("postNo: " + postNo);
         log.debug("updatedReply: " + updatedReply);
-        replyJpaRepository.save(
-                Reply.builder()
-                        .replyNo(replyNo)
-                        .reply(updatedReply)
-                        .modifyDate(LocalDateTime.now().plusHours(9L))
-                        .replyFromPost(postJpaRepository.findByPostNo(postNo).get())
-                        .replyFromUser(userJpaRepository.findByUserNo(userNo).get())
-                        .build()
-        );
-        // TODO: 댓글 가리기 - 권한: 블로그 관리자
+        Reply reply = replyJpaRepository.findByReplyNo(replyNo).get();
+        Post post = postJpaRepository.findByPostNo(postNo).get();
+
+        User replier = userJpaRepository.findByUserNo(reply.getReplyFromUser().getUserNo()).get();
+        User user = userJpaRepository.findByUserNo(userNo).get();
+        User bloger = userJpaRepository.findByNickname(nickname).get();
+
+        LocalDateTime modifyDate = reply.getModifyDate();
+
+        // TODO: 댓글 수정 - 권한: 댓글 작성자
+        if (user == replier && isBlind == null) {
+            replyJpaRepository.save(
+                    Reply.builder()
+                            .replyNo(replyNo)
+                            .reply(updatedReply)
+                            .isBlind("false")
+                            .modifyDate(LocalDateTime.now().plusHours(9L))
+                            .replyFromPost(post)
+                            .replyFromUser(replier)
+                            .build()
+            );
+        } else if (user == bloger && isBlind != null){
+            // TODO: 댓글 가리기 - 권한: 블로그 관리자
+            if (isBlind.equals("true")) {
+                replyJpaRepository.save(
+                        Reply.builder()
+                                .replyNo(replyNo)
+                                .reply(updatedReply)
+                                .isBlind("true")
+                                .modifyDate(modifyDate)
+                                .replyFromPost(post)
+                                .replyFromUser(replier)
+                                .build()
+                );
+            } else {
+                replyJpaRepository.save(
+                        Reply.builder()
+                                .replyNo(replyNo)
+                                .reply(updatedReply)
+                                .isBlind("false)")
+                                .modifyDate(modifyDate)
+                                .replyFromPost(post)
+                                .replyFromUser(replier)
+                                .build()
+                );
+            }
+        }
+
         return setRedirectUrl(nickname, postNo);
     }
 

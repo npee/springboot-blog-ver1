@@ -43,14 +43,14 @@
         <h3>category list</h3>
         <ul id="category-list">
             <c:forEach items="${categories}" var="category">
-                <li><a href="<c:url value="/${user.nickname}/categories/${category.categoryNo}" />">${category.category}</a></li>
+                <li><a href="<c:url value="/${bloger.nickname}/categories/${category.categoryNo}" />">${category.category}</a></li>
             </c:forEach>
         </ul>
 
         <h3>post list</h3>
         <ul id="post-list">
             <c:forEach items="${posts}" var="post">
-                <li><a href="<c:url value="/${user.nickname}/${post.postNo}" />">${post.title}</a></li>
+                <li><a href="<c:url value="/${bloger.nickname}/${post.postNo}" />">${post.title}</a></li>
             </c:forEach>
         </ul>
 
@@ -68,7 +68,7 @@
         <p>내용: ${post.body}</p>
         <%-- 수정 버튼(작성자 권한) --%>
         <c:if test="${user.userNo eq bloger.userNo }">
-            <a href="<c:url value="/${user.nickname}/update-post" />">포스트 수정</a>
+            <a href="<c:url value="/${bloger.nickname}/update-post" />">포스트 수정</a>
         </c:if>
         <%-- 댓글 --%>
         <h3>댓글</h3>
@@ -88,7 +88,7 @@
                 <c:if test="${param.isCreateReply eq true}">
                     <h4>댓글 작성하기(내 포스트)</h4>
                     <%-- 댓글 작성 폼 --%>
-                    <form action="<c:url value="/${user.nickname}/${post.postNo}/create-reply" />" method="POST">
+                    <form action="<c:url value="/${bloger.nickname}/${post.postNo}/create-reply" />" method="POST">
                         <input type="hidden" name="userNo" value="${user.userNo}">
                         <label for="bloger-reply">댓글: </label>
                         <input type="text" name="newReply" id="bloger-reply"><br>
@@ -104,7 +104,7 @@
                 <c:if test="${param.isCreateReply eq true}">
                     <h4>댓글 작성하기(${bloger.nickname}의 포스트)</h4>
                     <%-- 댓글 작성 폼 --%>
-                    <form action="<c:url value="/${user.nickname}/${post.postNo}/create-reply" />" method="POST">
+                    <form action="<c:url value="/${bloger.nickname}/${post.postNo}/create-reply" />" method="POST">
                         <input type="hidden" name="userNo" value="${user.userNo}">
                         <label for="guest-reply">댓글: </label>
                         <input type="text" name="newReply" id="guest-reply"><br>
@@ -130,7 +130,14 @@
                             <c:forEach items="${replies}" var="reply">
                                 <li>
                                     <p>작성자: ${reply.replyFromUser.nickname}</p>
-                                    <p>내용: ${reply.reply}</p>
+                                    <c:choose>
+                                        <c:when test="${reply.isBlind eq true}">
+                                            <p>블라인드 처리된 댓글입니다.</p>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <p>내용: ${reply.reply}</p>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </li>
                             </c:forEach>
                         </ul>
@@ -151,17 +158,79 @@
                                     <c:forEach items="${replies}" var="reply">
                                         <li>
                                             <p>작성자: ${reply.replyFromUser.nickname}</p>
-                                            <p>내용: ${reply.reply}</p>
+                                            <c:choose>
+                                                <c:when test="${reply.isBlind eq true}">
+                                                    <p>블라인드 처리된 댓글입니다.</p>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <p>내용: ${reply.reply}</p>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </li>
                                     </c:forEach>
                                 </c:when>
                                 <c:when test="${param.isUpdateReply eq true}">
                                     <p>댓글 수정 폼</p>
+                                    <c:if test="${not empty param.updateReplyNo}">
+                                        <form action="<c:url value="/${bloger.nickname}/${post.postNo}/update-reply" />" method="POST">
+                                            <c:forEach items="${replies}" var="reply">
+                                                <c:choose>
+                                                    <c:when test="${reply.replyNo eq param.updateReplyNo and reply.replyFromUser.userNo eq user.userNo}">
+                                                        <label>내용:</label>
+                                                        <input type="hidden" name="userNo" value="${user.userNo}">
+                                                        <input type="hidden" name="replyNo" value="${reply.replyNo}">
+
+                                                        <input type="text" name="updatedReply" value="${reply.reply}"><br>
+                                                        <input type="submit" value="수정 완료">
+                                                    </c:when>
+                                                    <c:when test="${reply.replyNo eq param.updateReplyNo and param.isBlind eq false}">
+                                                        <label>내용:</label>
+                                                        <input type="hidden" name="userNo" value="${user.userNo}">
+                                                        <input type="hidden" name="replyNo" value="${reply.replyNo}">
+
+                                                        <input type="hidden" name="isBlind" value="true">
+                                                        <input type="hidden" name="updatedReply" value="${reply.reply}">
+                                                        <p>${reply.reply}</p>
+                                                        <input type="submit" value="블라인드">
+                                                    </c:when>
+                                                    <c:when test="${reply.replyNo eq param.updateReplyNo and param.isBlind eq true}">
+                                                        <label>내용:</label>
+                                                        <input type="hidden" name="userNo" value="${user.userNo}">
+                                                        <input type="hidden" name="replyNo" value="${reply.replyNo}">
+
+                                                        <input type="hidden" name="isBlind" value="false">
+                                                        <input type="hidden" name="updatedReply" value="${reply.reply}">
+                                                        <p>${reply.reply}</p>
+                                                        <input type="submit" value="블라인드 해제">
+                                                    </c:when>
+                                                </c:choose>
+                                            </c:forEach>
+                                        </form>
+                                    </c:if>
                                     <c:forEach items="${replies}" var="reply">
-                                        <li>
-                                            <p>작성자: ${reply.replyFromUser.nickname}</p>
-                                            <p>내용: ${reply.reply}</p>
-                                        </li>
+                                        <c:choose>
+                                            <c:when test="${user.userNo eq reply.replyFromUser.userNo}">
+                                                <li>
+                                                    <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                                    <p>내용: ${reply.reply}</p>
+                                                    <a href="<c:url value="/${bloger.nickname}/${post.postNo}?isUpdateReply=true&updateReplyNo=${reply.replyNo}" />">수정하기</a>
+                                                </li>
+                                            </c:when>
+                                            <c:when test="${reply.isBlind eq false}">
+                                                <li>
+                                                    <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                                    <p>내용: ${reply.reply}</p>
+                                                    <a href="<c:url value="/${bloger.nickname}/${post.postNo}?isUpdateReply=true&updateReplyNo=${reply.replyNo}&isBlind=false" />">블라인드</a>
+                                                </li>
+                                            </c:when>
+                                            <c:when test="${reply.isBlind eq true}">
+                                                <li>
+                                                    <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                                    <p>블라인드 처리된 댓글입니다.</p>
+                                                    <a href="<c:url value="/${bloger.nickname}/${post.postNo}?isUpdateReply=true&updateReplyNo=${reply.replyNo}&isBlind=true" />">블라인드 해제</a>
+                                                </li>
+                                            </c:when>
+                                        </c:choose>
                                     </c:forEach>
                                 </c:when>
                                 <c:when test="${param.isDeleteReply eq true}">
@@ -169,7 +238,14 @@
                                     <c:forEach items="${replies}" var="reply">
                                         <li>
                                             <p>작성자: ${reply.replyFromUser.nickname}</p>
-                                            <p>내용: ${reply.reply}</p>
+                                            <c:choose>
+                                                <c:when test="${reply.isBlind eq true}">
+                                                    <p>블라인드 처리된 댓글입니다.</p>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <p>내용: ${reply.reply}</p>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </li>
                                     </c:forEach>
                                 </c:when>
@@ -192,7 +268,14 @@
                                     <c:forEach items="${replies}" var="reply">
                                         <li>
                                             <p>작성자: ${reply.replyFromUser.nickname}</p>
-                                            <p>내용: ${reply.reply}</p>
+                                            <c:choose>
+                                                <c:when test="${reply.isBlind eq true}">
+                                                    <p>블라인드 처리된 댓글입니다.</p>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <p>내용: ${reply.reply}</p>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </li>
                                     </c:forEach>
                                 </c:when>
@@ -203,6 +286,7 @@
                                             <c:forEach items="${replies}" var="reply">
                                                 <c:if test="${reply.replyNo eq param.updateReplyNo and reply.replyFromUser.userNo eq user.userNo}">
                                                     <label>내용:</label>
+                                                    <input type="hidden" name="isBlind" value="${false}">
                                                     <input type="hidden" name="userNo" value="${user.userNo}">
                                                     <input type="hidden" name="replyNo" value="${reply.replyNo}">
                                                     <input type="text" name="updatedReply" value="${reply.reply}"><br>
@@ -234,7 +318,14 @@
                                     <c:forEach items="${replies}" var="reply">
                                         <li>
                                             <p>작성자: ${reply.replyFromUser.nickname}</p>
-                                            <p>내용: ${reply.reply}</p>
+                                            <c:choose>
+                                                <c:when test="${reply.isBlind eq true}">
+                                                    <p>블라인드 처리된 댓글입니다.</p>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <p>내용: ${reply.reply}</p>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </li>
                                     </c:forEach>
                                 </c:when>
