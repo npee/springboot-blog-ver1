@@ -235,18 +235,42 @@
                                 </c:when>
                                 <c:when test="${param.isDeleteReply eq true}">
                                     <p>댓글 삭제 폼</p>
+                                    <c:if test="${param.isDeleteReply eq true}">
+                                        <c:forEach items="${replies}" var="reply">
+                                            <c:if test="${reply.replyNo eq param.deleteReplyNo and reply.replyFromUser.userNo eq user.userNo}">
+                                                <form action="<c:url value="/${bloger.nickname}/${post.postNo}/delete-reply" />" method="POST">
+                                                    <input type="hidden" name="userNo" value="${user.userNo}">
+                                                    <input type="hidden" name="replyNo" value="${reply.replyNo}">
+                                                    <p>내용</p>
+                                                    <p>${reply.reply}</p>
+                                                    <input type="submit" value="삭제">
+                                                </form>
+                                            </c:if>
+                                        </c:forEach>
+                                    </c:if>
                                     <c:forEach items="${replies}" var="reply">
-                                        <li>
-                                            <p>작성자: ${reply.replyFromUser.nickname}</p>
-                                            <c:choose>
-                                                <c:when test="${reply.isBlind eq true}">
-                                                    <p>블라인드 처리된 댓글입니다.</p>
-                                                </c:when>
-                                                <c:otherwise>
+                                        <c:choose>
+                                            <c:when test="${user.userNo eq reply.replyFromUser.userNo}">
+                                                <li>
+                                                    <p>작성자: ${reply.replyFromUser.nickname}</p>
                                                     <p>내용: ${reply.reply}</p>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </li>
+                                                    <a href="<c:url value="/${bloger.nickname}/${post.postNo}?isDeleteReply=true&deleteReplyNo=${reply.replyNo}" />">삭제</a>
+                                                </li>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <li>
+                                                    <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                                    <c:choose>
+                                                        <c:when test="${reply.isBlind eq true}">
+                                                            <p>블라인드 처리된 댓글입니다.</p>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <p>내용: ${reply.reply}</p>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </li>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:forEach>
                                 </c:when>
                             </c:choose>
@@ -307,7 +331,14 @@
                                             <c:otherwise>
                                                 <li>
                                                     <p>작성자: ${reply.replyFromUser.nickname}</p>
-                                                    <p>내용: ${reply.reply}</p>
+                                                    <c:choose>
+                                                        <c:when test="${reply.isBlind eq true}">
+                                                            <p>블라인드 처리된 댓글입니다.</p>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <p>내용: ${reply.reply}</p>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </li>
                                             </c:otherwise>
                                         </c:choose>
@@ -315,18 +346,42 @@
                                 </c:when>
                                 <c:when test="${param.isDeleteReply eq true}">
                                     <p>댓글 삭제 폼</p>
+                                    <c:if test="${param.isDeleteReply eq true}">
+                                        <c:forEach items="${replies}" var="reply">
+                                            <c:if test="${reply.replyNo eq param.deleteReplyNo and reply.replyFromUser.userNo eq user.userNo}">
+                                                <form action="<c:url value="/${bloger.nickname}/${post.postNo}/delete-reply" />" method="POST">
+                                                    <input type="hidden" name="userNo" value="${user.userNo}">
+                                                    <input type="hidden" name="replyNo" value="${reply.replyNo}">
+                                                    <p>내용</p>
+                                                    <p>${reply.reply}</p>
+                                                    <input type="submit" value="삭제">
+                                                </form>
+                                            </c:if>
+                                        </c:forEach>
+                                    </c:if>
                                     <c:forEach items="${replies}" var="reply">
-                                        <li>
-                                            <p>작성자: ${reply.replyFromUser.nickname}</p>
-                                            <c:choose>
-                                                <c:when test="${reply.isBlind eq true}">
-                                                    <p>블라인드 처리된 댓글입니다.</p>
-                                                </c:when>
-                                                <c:otherwise>
+                                        <c:choose>
+                                            <c:when test="${user.userNo eq reply.replyFromUser.userNo}">
+                                                <li>
+                                                    <p>작성자: ${reply.replyFromUser.nickname}</p>
                                                     <p>내용: ${reply.reply}</p>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </li>
+                                                    <a href="<c:url value="/${bloger.nickname}/${post.postNo}?isDeleteReply=true&deleteReplyNo=${reply.replyNo}" />">삭제</a>
+                                                </li>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <li>
+                                                    <p>작성자: ${reply.replyFromUser.nickname}</p>
+                                                    <c:choose>
+                                                        <c:when test="${reply.isBlind eq true}">
+                                                            <p>블라인드 처리된 댓글입니다.</p>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <p>내용: ${reply.reply}</p>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </li>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:forEach>
                                 </c:when>
                             </c:choose>
@@ -335,7 +390,6 @@
                 </c:choose>
             </c:otherwise>
         </c:choose>
-
         <c:import url="/WEB-INF/views/common/footer.jsp" />
     </body>
 </html>

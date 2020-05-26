@@ -283,7 +283,7 @@ public class BlogController {
 
         LocalDateTime modifyDate = reply.getModifyDate();
 
-        // TODO: 댓글 수정 - 권한: 댓글 작성자
+        // 댓글 수정 - 권한: 댓글 작성자
         if (user == replier && isBlind == null) {
             replyJpaRepository.save(
                     Reply.builder()
@@ -296,7 +296,7 @@ public class BlogController {
                             .build()
             );
         } else if (user == bloger && isBlind != null){
-            // TODO: 댓글 가리기 - 권한: 블로그 관리자
+            // 댓글 가리기 - 권한: 블로그 관리자
             if (isBlind.equals("true")) {
                 replyJpaRepository.save(
                         Reply.builder()
@@ -328,8 +328,17 @@ public class BlogController {
     @PostMapping("/{postNo}/delete-reply")
     public String delete_reply(@PathVariable String nickname,
                                @RequestParam Long userNo,
-                               @PathVariable Long postNo) {
-        // TODO: 댓글 삭제 - 권한: 댓글 작성자
+                               @PathVariable Long postNo,
+                               @RequestParam Long replyNo) {
+
+        // 댓글 삭제 - 권한: 댓글 작성자
+        Optional<Reply> reply = replyJpaRepository.findByReplyNo(replyNo);
+        if (reply.isPresent() && reply.get().getReplyFromUser().getUserNo().equals(userNo)) {
+            replyJpaRepository.delete(reply.get());
+        } else {
+            log.error("댓글 삭제 실패!");
+        }
+
         return setRedirectUrl(nickname, postNo);
     }
 
