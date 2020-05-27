@@ -1,6 +1,11 @@
 # springboot-blog
 ## Summary
 ## Update
+### 2020.05.26
+* Create function(Delete a selected reply)
+* Create function(Blind selected reply)
+* Create function(Read replies)
+* Create function(Create a reply)
 ### 2020.05.24
 * Create function(Delete a selected category)
 * Create function(Update a selected category)
