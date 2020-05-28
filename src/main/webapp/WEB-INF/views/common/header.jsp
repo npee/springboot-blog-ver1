@@ -8,8 +8,13 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%--@elvariable id="user" type="User"--%>
+<%--@elvariable id="bloger" type="User"--%>
 <header>
     <h1>header</h1>
+    <h2><a href="/">home</a></h2>
+    <c:if test="${not empty bloger}">
+        <h2><a href="<c:url value="/${bloger.nickname}" />">${bloger.nickname}의 블로그</a></h2>
+    </c:if>
     <c:choose>
         <c:when test="${empty user}">
             <li><a href="<c:url value="/user/signup" />">회원가입</a></li>
