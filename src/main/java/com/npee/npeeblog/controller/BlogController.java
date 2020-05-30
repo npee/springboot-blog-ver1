@@ -99,23 +99,27 @@ public class BlogController {
 
         blogService.initSession(nickname, session);
 
-        Post post = postJpaRepository.findByPostNo(postNo).get();
+        Optional<Post> optPost = postJpaRepository.findByPostNo(postNo);
+        Optional<List<Reply>> optReplyList = replyJpaRepository.findAllByReplyFromPost_PostNo(postNo);
 
-        // TODO: 조회수 조건 재설정하기
-        Long count = post.getCount();
-        post.setCount(++count);
-        postJpaRepository.save(post);
-
-        Optional<List<Reply>> replyList = replyJpaRepository.findAllByReplyFromPost_PostNo(postNo);
         List<Reply> replies;
-        if (replyList.isPresent()) {
-            replies = replyList.get();
-            session.setAttribute("replies", replies);
-        } else {
-            session.setAttribute("emptyReplyMessage", "작성된 댓글이 없습니다.");
-        }
+        if (optPost.isPresent()) {
+            Post post = optPost.get();
 
-        session.setAttribute("post", post);
+            if (optReplyList.isPresent()) {
+                replies = optReplyList.get();
+                session.setAttribute("replies", replies);
+            } else {
+                session.setAttribute("emptyReplyMessage", "작성된 댓글이 없습니다.");
+            }
+
+            // TODO: 조회수 조건 재설정하기
+            Long count = post.getCount();
+            post.setCount(++count);
+            postJpaRepository.save(post);
+
+            session.setAttribute("post", post);
+        }
 
         return "blog/post";
     }
