@@ -28,7 +28,6 @@ public class BlogController {
     private final CategoryJpaRepository categoryJpaRepository;
     private final PostJpaRepository postJpaRepository;
     private final ReplyJpaRepository replyJpaRepository;
-    // private final UserServiceImpl userService;
     private final BlogServiceImpl blogService;
 
     /**
@@ -47,8 +46,11 @@ public class BlogController {
     }
 
     @GetMapping("/write")
-    public String write_page(HttpSession session) {
+    public String write_page(@PathVariable String nickname, HttpSession session) {
         session.removeAttribute("post");
+
+        blogService.initSession(nickname, session);
+
         Blog blog = (Blog) session.getAttribute("blog");
         Post post = blogService.builder(0L, null, blog, "", "");
 
@@ -67,6 +69,7 @@ public class BlogController {
         // TODO: 방어코드 작성
         Category category = categoryJpaRepository.findById(categoryNo).get();
         Blog blog = blogJpaRepository.findByBlogFromUser_Nickname(nickname).get();
+
         Post post = postJpaRepository.save(blogService.builder(postNo, category, blog, postTitle, postBody));
 
         session.setAttribute("newPost", post);
@@ -86,38 +89,25 @@ public class BlogController {
 
         session.removeAttribute("post");
         session.removeAttribute("replies");
-        // TODO: 방어코드 작성
+
+        blogService.initSession(nickname, session);
+
         Post post = postJpaRepository.findByPostNo(postNo).get();
-        Blog blog = blogJpaRepository.findByBlogFromUser_Nickname(nickname).get();
-        User bloger = userJpaRepository.findByNickname(nickname).get();
 
-        Long currentBlogNo = post.getPostFromBlog().getBlogNo();
-
-        List<Post> posts = postJpaRepository.findAllByPostFromBlog_BlogNo(currentBlogNo).get();
-        Long blogNoOfCurrentPost = blog.getBlogFromUser().getUserNo();
-
-        if (currentBlogNo.equals(blogNoOfCurrentPost)) {
-            // Long blogNo = ((Blog) session.getAttribute("blog")).getBlogNo();
-            Long count = post.getCount();
-            post.setCount(++count);
-
-            // Long categoryNo = post.getCategoryTable().getCategoryNo();
-            // String categoryName = categoryJpaRepository.findByCategoryNo(categoryNo).get().getCategory();
-            postJpaRepository.save(post);
-        }
+        // TODO: 조회수 조건 재설정하기
+        Long count = post.getCount();
+        post.setCount(++count);
+        postJpaRepository.save(post);
 
         Optional<List<Reply>> replyList = replyJpaRepository.findAllByReplyFromPost_PostNo(postNo);
         List<Reply> replies;
         if (replyList.isPresent()) {
             replies = replyList.get();
             session.setAttribute("replies", replies);
-
         } else {
             session.setAttribute("emptyReplyMessage", "작성된 댓글이 없습니다.");
         }
 
-        session.setAttribute("bloger", bloger);
-        session.setAttribute("posts", posts);
         session.setAttribute("post", post);
 
         return "blog/post";
@@ -181,6 +171,8 @@ public class BlogController {
 
         Blog blog = (Blog) session.getAttribute("blog");
         categoryJpaRepository.save(blogService.builder(blog, updateCategoryNo, categoryName, categoryDescription));
+
+        // TODO: Guest가 자기 댓글 수정 시 수정 안되는 문제 해결
 
         return setRedirectUrl(nickname, "settings");
     }
