@@ -32,6 +32,11 @@ public class BlogServiceImpl implements BlogService, CategoryService, PostServic
         Optional<List<Category>> categories;
         Optional<List<Post>> posts;
 
+        session.removeAttribute("bloger");
+        session.removeAttribute("blog");
+        session.removeAttribute("categoires");
+        session.removeAttribute("posts");
+
         bloger = userJpaRepository.findByNickname(nickname);
         if (bloger.isPresent()) {
             session.setAttribute("bloger", bloger.get());
