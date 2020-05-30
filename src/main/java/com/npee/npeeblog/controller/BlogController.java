@@ -41,27 +41,7 @@ public class BlogController {
     public String blogMain(@PathVariable String nickname, HttpSession session) {
         // PathVariable에 해당하는 nickname을 가진 User의 블로그 정보로
         // 세션의 내용을 모두 교체한 후 페이지를 불러온다
-
-        Optional<User> bloger;
-        Optional<Blog> blog;
-        Optional<List<Category>> categories;
-        Optional<List<Post>> posts;
-
-        bloger = userJpaRepository.findByNickname(nickname);
-        if (bloger.isPresent()) {
-            session.setAttribute("bloger", bloger.get());
-
-            blog = blogJpaRepository.findByBlogNo(bloger.get().getUserNo());
-            blog.ifPresent(myblog -> session.setAttribute("blog", myblog));
-
-            if (blog.isPresent()) {
-                categories = categoryJpaRepository.findAllByCategoryFromBlog_BlogNo(blog.get().getBlogNo());
-                categories.ifPresent(myCategories -> session.setAttribute("categories", myCategories));
-
-                posts = postJpaRepository.findAllByPostFromBlog_BlogNo(blog.get().getBlogNo());
-                posts.ifPresent(myPosts -> session.setAttribute("posts", myPosts));
-            }
-        }
+        blogService.initSession(nickname, session);
 
         return "blog/blog";
     }
@@ -178,32 +158,11 @@ public class BlogController {
      */
     @GetMapping("/settings")
     public String blog_settings(@PathVariable String nickname,
-                                HttpSession session,
-                                HttpServletRequest request,
-                                HttpServletResponse response) {
+                                HttpSession session) {
         // TODO: 블로그 프로필 수정 - view 작업 직전
 
         // TODO: 중복 코드 리팩토링
-        Optional<User> bloger;
-        Optional<Blog> blog;
-        Optional<List<Category>> categories;
-        Optional<List<Post>> posts;
-
-        bloger = userJpaRepository.findByNickname(nickname);
-        if (bloger.isPresent()) {
-            session.setAttribute("bloger", bloger.get());
-
-            blog = blogJpaRepository.findByBlogNo(bloger.get().getUserNo());
-            blog.ifPresent(myblog -> session.setAttribute("blog", myblog));
-
-            if (blog.isPresent()) {
-                categories = categoryJpaRepository.findAllByCategoryFromBlog_BlogNo(blog.get().getBlogNo());
-                categories.ifPresent(myCategories -> session.setAttribute("categories", myCategories));
-
-                posts = postJpaRepository.findAllByPostFromBlog_BlogNo(blog.get().getBlogNo());
-                posts.ifPresent(myPosts -> session.setAttribute("posts", myPosts));
-            }
-        }
+        blogService.initSession(nickname, session);
 
         return "settings/blog-settings";
     }
