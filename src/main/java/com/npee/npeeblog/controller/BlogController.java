@@ -66,15 +66,22 @@ public class BlogController {
                         @RequestParam String postBody,
                         HttpSession session) {
 
-        // TODO: 방어코드 작성
-        Category category = categoryJpaRepository.findById(categoryNo).get();
-        Blog blog = blogJpaRepository.findByBlogFromUser_Nickname(nickname).get();
+        Optional<Blog> optBlog = blogJpaRepository.findByBlogFromUser_Nickname(nickname);
+        Optional<Category> optCategory = categoryJpaRepository.findById(categoryNo);
+        Blog blog = new Blog();
+        Category category = new Category();
+        // Blog blog = (Blog) session.getAttribute("blog"); // 세션에서 정보 얻어서 DB에 삽입한 경우 blog_no에 null이 들어갔다
+        if (optBlog.isPresent()) {
+            blog = optBlog.get();
+        }
+        if (optCategory.isPresent()) {
+            category = optCategory.get();
+        }
 
-        Post post = postJpaRepository.save(blogService.builder(postNo, category, blog, postTitle, postBody));
+        Post newPost = postJpaRepository.save(blogService.builder(postNo, category, blog, postTitle, postBody));
+        session.setAttribute("newPost", newPost);
 
-        session.setAttribute("newPost", post);
-
-        return setRedirectUrl(nickname, post.getPostNo());
+        return setRedirectUrl(nickname, newPost.getPostNo());
     }
 
     @GetMapping("/update-post")
