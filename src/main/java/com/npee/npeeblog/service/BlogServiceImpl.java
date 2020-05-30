@@ -27,29 +27,29 @@ public class BlogServiceImpl implements BlogService, CategoryService, PostServic
 
     @Override
     public void initSession(String nickname, HttpSession session) {
-        Optional<User> bloger;
-        Optional<Blog> blog;
-        Optional<List<Category>> categories;
-        Optional<List<Post>> posts;
+        Optional<User> optBloger;
+        Optional<Blog> optBlog;
+        Optional<List<Category>> optCategories;
+        Optional<List<Post>> optPosts;
 
         session.removeAttribute("bloger");
         session.removeAttribute("blog");
         session.removeAttribute("categoires");
         session.removeAttribute("posts");
 
-        bloger = userJpaRepository.findByNickname(nickname);
-        if (bloger.isPresent()) {
-            session.setAttribute("bloger", bloger.get());
+        optBloger = userJpaRepository.findByNickname(nickname);
+        if (optBloger.isPresent()) {
+            session.setAttribute("bloger", optBloger.get());
 
-            blog = blogJpaRepository.findByBlogNo(bloger.get().getUserNo());
-            blog.ifPresent(myblog -> session.setAttribute("blog", myblog));
+            optBlog = blogJpaRepository.findByBlogNo(optBloger.get().getUserNo());
+            optBlog.ifPresent(blog -> session.setAttribute("blog", blog));
 
-            if (blog.isPresent()) {
-                categories = categoryJpaRepository.findAllByCategoryFromBlog_BlogNo(blog.get().getBlogNo());
-                categories.ifPresent(myCategories -> session.setAttribute("categories", myCategories));
+            if (optBlog.isPresent()) {
+                optCategories = categoryJpaRepository.findAllByCategoryFromBlog_BlogNo(optBlog.get().getBlogNo());
+                optCategories.ifPresent(categories -> session.setAttribute("categories", categories));
 
-                posts = postJpaRepository.findAllByPostFromBlog_BlogNo(blog.get().getBlogNo());
-                posts.ifPresent(myPosts -> session.setAttribute("posts", myPosts));
+                optPosts = postJpaRepository.findAllByPostFromBlog_BlogNo(optBlog.get().getBlogNo());
+                optPosts.ifPresent(posts -> session.setAttribute("posts", posts));
             }
         }
     }
