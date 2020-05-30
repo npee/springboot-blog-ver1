@@ -85,7 +85,8 @@ public class BlogController {
     }
 
     @GetMapping("/update-post")
-    public String update_post() {
+    public String update_post(@PathVariable String nickname, HttpSession session) {
+        blogService.initSession(nickname, session);
         return "blog/write";
     }
 
