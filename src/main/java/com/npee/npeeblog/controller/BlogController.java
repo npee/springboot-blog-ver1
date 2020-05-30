@@ -85,7 +85,7 @@ public class BlogController {
                        HttpSession session) {
 
         session.removeAttribute("post");
-
+        session.removeAttribute("replies");
         // TODO: 방어코드 작성
         Post post = postJpaRepository.findByPostNo(postNo).get();
         Blog blog = blogJpaRepository.findByBlogFromUser_Nickname(nickname).get();
@@ -161,7 +161,6 @@ public class BlogController {
                                 HttpSession session) {
         // TODO: 블로그 프로필 수정 - view 작업 직전
 
-        // TODO: 중복 코드 리팩토링
         blogService.initSession(nickname, session);
 
         return "settings/blog-settings";
