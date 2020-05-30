@@ -3,15 +3,11 @@ package com.npee.npeeblog.controller;
 import com.npee.npeeblog.model.entity.*;
 import com.npee.npeeblog.model.repository.*;
 import com.npee.npeeblog.service.BlogServiceImpl;
-import com.npee.npeeblog.service.UserService;
-import com.npee.npeeblog.service.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,8 +28,8 @@ public class BlogController {
 
     /**
      * 추가되는 세션 정보 : bloger, blog, categories, posts
-     * @param nickname
-     * @param session
+     * @param nickname nickname
+     * @param session session
      * @return MVC View "blog/blog"
      */
     @GetMapping
@@ -154,8 +150,8 @@ public class BlogController {
 
     /**
      * 추가되는 세션 정보 : bloger, blog, categories, posts
-     * @param nickname
-     * @param session
+     * @param nickname nickname
+     * @param session session
      * @return MVC View "settings/blog-settings"
      */
     @GetMapping("/settings")
@@ -168,12 +164,6 @@ public class BlogController {
         return "settings/blog-settings";
     }
 
-    @PostMapping("/settings")
-    public String post_settings(@PathVariable String nickname, HttpSession session) {
-
-        return setRedirectUrl(nickname, "settings");
-    }
-
     @PostMapping("/update-category")
     public String update_category(@PathVariable String nickname,
                                   @RequestParam Long updateCategoryNo,
@@ -183,8 +173,6 @@ public class BlogController {
 
         Blog blog = (Blog) session.getAttribute("blog");
         categoryJpaRepository.save(blogService.builder(blog, updateCategoryNo, categoryName, categoryDescription));
-
-        // TODO: Guest가 자기 댓글 수정 시 수정 안되는 문제 해결
 
         return setRedirectUrl(nickname, "settings");
     }
@@ -244,6 +232,8 @@ public class BlogController {
         User bloger = userJpaRepository.findByNickname(nickname).get();
 
         LocalDateTime modifyDate = reply.getModifyDate();
+
+        // TODO: Guest가 자기 댓글 수정 시 수정 안되는 문제 해결
 
         // 댓글 수정 - 권한: 댓글 작성자
         if (user == replier && isBlind == null) {
