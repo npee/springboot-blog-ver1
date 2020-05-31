@@ -221,65 +221,30 @@ public class BlogController {
                                @RequestParam(required = false) String isBlind,
                                @RequestParam String updatedReply) {
 
-        log.debug("isBlind: " + isBlind);
-        log.debug("userNo: " + userNo);
-        log.debug("postNo: " + postNo);
-        log.debug("updatedReply: " + updatedReply);
+
         Reply reply = replyJpaRepository.findByReplyNo(replyNo).get();
         Post post = postJpaRepository.findByPostNo(postNo).get();
 
         User replier = userJpaRepository.findByUserNo(reply.getReplyFromUser().getUserNo()).get();
         User user = userJpaRepository.findByUserNo(userNo).get();
         User bloger = userJpaRepository.findByNickname(nickname).get();
+        
+        String blind = reply.getIsBlind();
 
-        LocalDateTime modifyDate = reply.getModifyDate();
-
-        // TODO: Guest가 자기 댓글 수정 시 수정 안되는 문제 해결
-
-        //  권한 확인(현재 사용자 : 댓글 작성자)
-        //      일반 수정이면(isBlind가 null 일때)
-        //           일반 수정
-        //      일반 수정이 아니면(isBlind가 null이 아닐 때)
-        //          댓글 작성자가 블로그 주인이면(replier == bloger)
-        //              isBlind가 true
-        //              isBlind가 false
-
-        // 댓글 수정 - 권한: 댓글 작성자
-        if (user == replier && isBlind == null) {
-            replyJpaRepository.save(
-                    Reply.builder()
-                            .replyNo(replyNo)
-                            .reply(updatedReply)
-                            .isBlind("false")
-                            .modifyDate(LocalDateTime.now().plusHours(9L))
-                            .replyFromPost(post)
-                            .replyFromUser(replier)
-                            .build()
-            );
-        } else if (user == bloger && isBlind != null){
-            // 댓글 가리기 - 권한: 블로그 관리자
-            if (isBlind.equals("true")) {
-                replyJpaRepository.save(
-                        Reply.builder()
-                                .replyNo(replyNo)
-                                .reply(updatedReply)
-                                .isBlind("true")
-                                .modifyDate(modifyDate)
-                                .replyFromPost(post)
-                                .replyFromUser(replier)
-                                .build()
-                );
-            } else {
-                replyJpaRepository.save(
-                        Reply.builder()
-                                .replyNo(replyNo)
-                                .reply(updatedReply)
-                                .isBlind("false)")
-                                .modifyDate(modifyDate)
-                                .replyFromPost(post)
-                                .replyFromUser(replier)
-                                .build()
-                );
+        if (user == replier) {
+            if (blind.equals("true")) {
+                // TODO: View에서 경고 메시지 출력하도록 변경하기
+                log.error("Blind 처리된 댓글은 수정이 불가능합니다.");
+            } else if (isBlind == null || blind.equals("false")) {
+                replyJpaRepository.save(blogService.builder(replyNo, updatedReply, "false", post, user));
+            }
+        } else {
+            if (user == bloger) {
+                if (isBlind.equals("true")) {
+                    replyJpaRepository.save(blogService.builder(replyNo, updatedReply, "true", post, replier));
+                } else {
+                    replyJpaRepository.save(blogService.builder(replyNo, updatedReply, "false", post, replier));
+                }
             }
         }
 
