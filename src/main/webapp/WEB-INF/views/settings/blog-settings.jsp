@@ -23,6 +23,7 @@
         <h2>블로그 프로필 수정</h2>
 
         <h1>카테고리 설정</h1>
+
         <%-- 생성/수정/삭제 폼 분기 --%>
         <h2><a href="<c:url value="/${user.nickname}/settings?categoryNo=0&isCreateCategory=true" />">카테고리 생성</a></h2>
         <c:choose>
@@ -44,11 +45,18 @@
 
         <h2><a href="<c:url value="/${user.nickname}/settings?isUpdateCategory=true&categoryNo=0" />">카테고리 수정</a></h2>
         <h3>카테고리 목록</h3>
-        <ul>
-            <c:forEach items="${categories}" var="category">
-                <li><a href="<c:url value="/${user.nickname}/settings?isUpdateCategory=true&categoryNo=${category.categoryNo}" />">${category.category}</a></li>
-            </c:forEach>
-        </ul>
+        <c:choose>
+            <c:when test="${empty categories}">
+                <p>카테고리 목록이 비어있습니다. 새 카테고리를 생성해주세요.</p>
+            </c:when>
+            <c:otherwise>
+                <c:forEach items="${categories}" var="category">
+                    <ul>
+                        <li><a href="<c:url value="/${user.nickname}/settings?isUpdateCategory=true&categoryNo=${category.categoryNo}" />">${category.category}</a></li>
+                    </ul>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
         <c:if test="${param.isUpdateCategory eq true}">
             <c:forEach items="${categories}" var="category" >
                 <c:if test="${(category.categoryNo - param.categoryNo) eq 0}">
@@ -64,20 +72,28 @@
                 </c:if>
             </c:forEach>
         </c:if>
+
         <h2><a href="<c:url value="/${user.nickname}/settings?categoryNo=0&isDeleteCategory=true" />">카테고리 삭제</a></h2>
         <c:choose>
             <c:when test="${param.isDeleteCategory eq true}">
-                <h3>TRUE</h3>
-                <h3>카테고리 삭제 폼</h3>
-                <form action="<c:url value="/${user.nickname}/delete-category" />" method="POST">
-                    <label for="category-selectbox">Select Category</label>
-                    <select name="deleteCategoryNo" id="category-selectbox">
-                        <c:forEach items="${categories}" var="category">
-                            <option value="${category.categoryNo}">${category.category}</option>
-                        </c:forEach>
-                    </select><br>
-                    <input type="submit" id="delete-category" value="삭제">
-                </form>
+                <c:choose>
+                    <c:when test="${empty categories}">
+                        <p>카테고리 목록이 비어있습니다. 새 카테고리를 생성해주세요.</p>
+                    </c:when>
+                    <c:otherwise>
+                        <h3>TRUE</h3>
+                        <h3>카테고리 삭제 폼</h3>
+                        <form action="<c:url value="/${user.nickname}/delete-category" />" method="POST">
+                            <label for="category-selectbox">Select Category</label>
+                            <select name="deleteCategoryNo" id="category-selectbox">
+                                <c:forEach items="${categories}" var="category">
+                                    <option value="${category.categoryNo}">${category.category}</option>
+                                </c:forEach>
+                            </select><br>
+                            <input type="submit" id="delete-category" value="삭제">
+                        </form>
+                    </c:otherwise>
+                </c:choose>
             </c:when>
             <c:otherwise>
                 <h3>FALSE</h3>

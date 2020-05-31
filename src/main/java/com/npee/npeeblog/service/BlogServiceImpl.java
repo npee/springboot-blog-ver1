@@ -29,6 +29,8 @@ public class BlogServiceImpl implements BlogService, CategoryService, PostServic
         Optional<List<Category>> optCategories;
         Optional<List<Post>> optPosts;
 
+        List<Category> categories;
+
         session.removeAttribute("bloger");
         session.removeAttribute("blog");
         session.removeAttribute("categoires");
@@ -43,7 +45,12 @@ public class BlogServiceImpl implements BlogService, CategoryService, PostServic
 
             if (optBlog.isPresent()) {
                 optCategories = categoryJpaRepository.findAllByCategoryFromBlog_BlogNo(optBlog.get().getBlogNo());
-                optCategories.ifPresent(categories -> session.setAttribute("categories", categories));
+                if (optCategories.isPresent()) {
+                    categories = optCategories.get();
+                    session.setAttribute("categories", categories);
+                } else {
+                    session.removeAttribute("categories");
+                }
 
                 optPosts = postJpaRepository.findAllByPostFromBlog_BlogNo(optBlog.get().getBlogNo());
                 optPosts.ifPresent(posts -> session.setAttribute("posts", posts));

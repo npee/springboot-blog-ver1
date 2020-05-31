@@ -125,7 +125,7 @@ public class BlogController {
     public String delete_post_page(@PathVariable String nickname,
                                    @RequestParam Long postNo,
                                    HttpSession session) {
-        
+
         User AuthUser = (User) session.getAttribute("user");
 
         Optional<User> optUser = userJpaRepository.findByNickname(nickname);
@@ -164,14 +164,17 @@ public class BlogController {
     @PostMapping("/category")
     public String createCategory(@PathVariable String nickname,
                                  @RequestParam String categoryName,
-                                 @RequestParam String categoryDescription,
-                                 HttpSession session) {
+                                 @RequestParam String categoryDescription) {
 
-        Blog blog = (Blog) session.getAttribute("blog");
-        if (categoryDescription == null || categoryDescription.equals("")) {
-            categoryJpaRepository.save(blogService.builder(blog, categoryName));
-        } else {
-            categoryJpaRepository.save(blogService.builder(blog, categoryName, categoryDescription));
+        Blog blog;
+        Optional<Blog> optBlog = blogJpaRepository.findByBlogFromUser_Nickname(nickname);
+        if (optBlog.isPresent()) {
+            blog = optBlog.get();
+            if (categoryDescription == null || categoryDescription.equals("")) {
+                categoryJpaRepository.save(blogService.builder(blog, categoryName));
+            } else {
+                categoryJpaRepository.save(blogService.builder(blog, categoryName, categoryDescription));
+            }
         }
 
         return setRedirectUrl(nickname, "settings");
@@ -189,6 +192,7 @@ public class BlogController {
         // TODO: 블로그 프로필 수정 - view 작업 직전
 
         blogService.initSession(nickname, session);
+        // Optional<List<Category>> optCategoryList = categoryJpaRepository.findAllByCategoryFromBlog_BlogFromUser_Nickname(nickname);
 
         return "settings/blog-settings";
     }
@@ -197,11 +201,14 @@ public class BlogController {
     public String update_category(@PathVariable String nickname,
                                   @RequestParam Long updateCategoryNo,
                                   @RequestParam String categoryName,
-                                  @RequestParam String categoryDescription,
-                                  HttpSession session) {
+                                  @RequestParam String categoryDescription) {
 
-        Blog blog = (Blog) session.getAttribute("blog");
-        categoryJpaRepository.save(blogService.builder(blog, updateCategoryNo, categoryName, categoryDescription));
+        Blog blog;
+        Optional<Blog> optBlog = blogJpaRepository.findByBlogFromUser_Nickname(nickname);
+        if (optBlog.isPresent()) {
+            blog = optBlog.get();
+            categoryJpaRepository.save(blogService.builder(blog, updateCategoryNo, categoryName, categoryDescription));
+        }
 
         return setRedirectUrl(nickname, "settings");
     }
@@ -210,9 +217,9 @@ public class BlogController {
     public String delete_category(@PathVariable String nickname,
                                   @RequestParam Long deleteCategoryNo) {
 
-        Optional<List<Post>> postList = postJpaRepository.findAllByPostFromCategory_CategoryNo(deleteCategoryNo);
-        log.debug("postList is Empty?: " + !postList.isPresent());
-        if (postList.isPresent()) {
+        Optional<List<Post>> optPostList = postJpaRepository.findAllByPostFromCategory_CategoryNo(deleteCategoryNo);
+        log.debug("postList is Empty?: " + !optPostList.isPresent());
+        if (optPostList.isPresent()) {
             // TODO: View에서 경고 메시지 출력하도록 변경하기
             log.error("카테고리에 포스트가 존재하면 카테고리를 삭제할 수 없습니다...");
         } else {
@@ -262,7 +269,7 @@ public class BlogController {
         User bloger = new User();
 
         Optional<Reply> optReply = replyJpaRepository.findByReplyNo(replyNo);
-        Optional<Post> optPost =postJpaRepository.findByPostNo(postNo);
+        Optional<Post> optPost = postJpaRepository.findByPostNo(postNo);
 
         if (optReply.isPresent() && optPost.isPresent()) {
             reply = optReply.get();
