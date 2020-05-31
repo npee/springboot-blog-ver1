@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -122,10 +121,39 @@ public class BlogController {
         return "blog/post";
     }
 
-    @PostMapping("/delete-post")
-    public String delete_post(@PathVariable String nickname) {
-        // TODO: 포스트 삭제 - 수정 페이지에 포함 / 관련 댓글 모두 삭제됨
-        return setRedirectUrl();
+    @GetMapping("/delete-post")
+    public String delete_post_page(@PathVariable String nickname,
+                                   @RequestParam Long postNo,
+                                   HttpSession session) {
+        
+        User AuthUser = (User) session.getAttribute("user");
+
+        Optional<User> optUser = userJpaRepository.findByNickname(nickname);
+        Optional<Post> optPost = postJpaRepository.findByPostNo(postNo);
+
+        User user;
+        Post post;
+        List<Post> postList;
+
+        if (optUser.isPresent() && optPost.isPresent()) {
+            user = optUser.get();
+            post = optPost.get();
+            Optional<List<Post>> optPostList = postJpaRepository.findAllByPostFromBlog_BlogFromUser_UserNo(user.getUserNo());
+            if (optPostList.isPresent()) {
+                // 현 사용자가 소유한 포스트에 지울 포스트가 포함되어있는지 검사한다
+                // 잘못된 접근(Url 요청) 방어코드
+                postList = optPostList.get();
+                if (AuthUser.getUserNo().equals(user.getUserNo()) && postList.contains(post)) {
+                    log.debug("삭제를 진행합니다. 댓글도 함께 삭제됩니다.");
+                    replyJpaRepository.deleteAllByReplyFromPost_PostNo(post.getPostNo());
+                    postJpaRepository.delete(post); // 단독으로 삭제 불가(연관 테이블의 데이터 존재)
+                } else {
+                    log.debug("해당 포스트에 대한 권한이 없습니다");
+                }
+            }
+        }
+
+        return setRedirectUrl(nickname);
     }
 
     @GetMapping("/categories")

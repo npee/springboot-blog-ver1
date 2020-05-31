@@ -69,6 +69,7 @@
         <%-- 수정 버튼(작성자 권한) --%>
         <c:if test="${user.userNo eq bloger.userNo }">
             <a href="<c:url value="/${bloger.nickname}/update-post" />">포스트 수정</a>
+            <a href="<c:url value="/${bloger.nickname}/delete-post?postNo=${post.postNo}" />">포스트 삭제</a>
         </c:if>
         <%-- 댓글 --%>
         <h3>댓글</h3>
