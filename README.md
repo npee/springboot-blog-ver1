@@ -1,6 +1,8 @@
 # springboot-blog
 ## Summary
 ## Update
+### 2020.05.28
+* Update view(Add link)
 ### 2020.05.26
 * Create function(Delete a selected reply)
 * Create function(Blind selected reply)
