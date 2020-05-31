@@ -1,9 +1,6 @@
 package com.npee.npeeblog.service;
 
-import com.npee.npeeblog.model.entity.Blog;
-import com.npee.npeeblog.model.entity.Category;
-import com.npee.npeeblog.model.entity.Post;
-import com.npee.npeeblog.model.entity.User;
+import com.npee.npeeblog.model.entity.*;
 import com.npee.npeeblog.model.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +14,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class BlogServiceImpl implements BlogService, CategoryService, PostService{
+public class BlogServiceImpl implements BlogService, CategoryService, PostService, ReplyService{
 
     private final UserJpaRepository userJpaRepository;
     private final BlogJpaRepository blogJpaRepository;
@@ -106,6 +103,19 @@ public class BlogServiceImpl implements BlogService, CategoryService, PostServic
                 // 빈 댓글 리스트가 필요할까?
                 .registerDate(LocalDateTime.now().plusHours(9L))
                 .modifyDate(LocalDateTime.now().plusHours(9L))
+                .build();
+    }
+
+    @Override
+    public Reply builder(Long replyNo, String reply, String isBlind, Post post, User user) {
+        return Reply.builder()
+                .replyNo(replyNo)
+                .reply(reply)
+                .isBlind(isBlind)
+                .registerDate(LocalDateTime.now().plusHours(9L))
+                .modifyDate(LocalDateTime.now().plusHours(9L))
+                .replyFromPost(post)
+                .replyFromUser(user)
                 .build();
     }
 }

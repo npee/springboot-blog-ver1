@@ -74,6 +74,7 @@ public class BlogController {
             category = optCategory.get();
         }
 
+        // 새 포스트 작성으로 접근 시 postNo는 null이므로 Create 쿼리로 매핑된다
         Post newPost = postJpaRepository.save(blogService.builder(postNo, category, blog, postTitle, postBody));
         session.setAttribute("newPost", newPost);
 
@@ -234,6 +235,14 @@ public class BlogController {
         LocalDateTime modifyDate = reply.getModifyDate();
 
         // TODO: Guest가 자기 댓글 수정 시 수정 안되는 문제 해결
+
+        //  권한 확인(현재 사용자 : 댓글 작성자)
+        //      일반 수정이면(isBlind가 null 일때)
+        //           일반 수정
+        //      일반 수정이 아니면(isBlind가 null이 아닐 때)
+        //          댓글 작성자가 블로그 주인이면(replier == bloger)
+        //              isBlind가 true
+        //              isBlind가 false
 
         // 댓글 수정 - 권한: 댓글 작성자
         if (user == replier && isBlind == null) {
