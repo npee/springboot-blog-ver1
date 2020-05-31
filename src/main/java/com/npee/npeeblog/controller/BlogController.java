@@ -200,8 +200,19 @@ public class BlogController {
                                   @PathVariable Long postNo,
                                   @RequestParam String newReply) {
 
-        Post post = postJpaRepository.findByPostNo(postNo).get();
-        User user = userJpaRepository.findByUserNo(userNo).get();
+        Optional<Post> optPost = postJpaRepository.findByPostNo(postNo);
+        Optional<User> optUser = userJpaRepository.findByUserNo(userNo);
+
+        Post post = new Post();
+        User user = new User();
+
+        if (optPost.isPresent()) {
+            post = optPost.get();
+        }
+        if (optUser.isPresent()) {
+            user = optUser.get();
+        }
+
         replyJpaRepository.save(blogService.builder(null, newReply, "false", post, user));
 
         return setRedirectUrl(nickname, postNo);
@@ -215,13 +226,30 @@ public class BlogController {
                                @RequestParam(required = false) String isBlind,
                                @RequestParam String updatedReply) {
 
+        Reply reply = new Reply();
+        Post post = new Post();
 
-        Reply reply = replyJpaRepository.findByReplyNo(replyNo).get();
-        Post post = postJpaRepository.findByPostNo(postNo).get();
+        User user = new User();
+        User replier = new User();
+        User bloger = new User();
 
-        User replier = userJpaRepository.findByUserNo(reply.getReplyFromUser().getUserNo()).get();
-        User user = userJpaRepository.findByUserNo(userNo).get();
-        User bloger = userJpaRepository.findByNickname(nickname).get();
+        Optional<Reply> optReply = replyJpaRepository.findByReplyNo(replyNo);
+        Optional<Post> optPost =postJpaRepository.findByPostNo(postNo);
+
+        if (optReply.isPresent() && optPost.isPresent()) {
+            reply = optReply.get();
+            post = optPost.get();
+
+            Optional<User> optUser = userJpaRepository.findByUserNo(userNo);
+            Optional<User> optReplier = userJpaRepository.findByUserNo(reply.getReplyFromUser().getUserNo());
+            Optional<User> optBloger = userJpaRepository.findByNickname(nickname);
+
+            if (optUser.isPresent() && optReplier.isPresent() && optBloger.isPresent()) {
+                user = optUser.get();
+                replier = optReplier.get();
+                bloger = optBloger.get();
+            }
+        }
 
         String blind = reply.getIsBlind();
 
