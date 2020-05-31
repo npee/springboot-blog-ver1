@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,8 @@ public class BlogController {
         // PathVariable에 해당하는 nickname을 가진 User의 블로그 정보로
         // 세션의 내용을 모두 교체한 후 페이지를 불러온다
         blogService.initSession(nickname, session);
+
+
 
         return "blog/blog";
     }
@@ -187,15 +190,53 @@ public class BlogController {
      * @return MVC View "settings/blog-settings"
      */
     @GetMapping("/settings")
-    public String blog_settings(@PathVariable String nickname,
-                                HttpSession session) {
-        // TODO: 블로그 프로필 수정 - view 작업 직전
+    public String blog_settings_page(@PathVariable String nickname,
+                                     HttpSession session) {
 
         blogService.initSession(nickname, session);
-        // Optional<List<Category>> optCategoryList = categoryJpaRepository.findAllByCategoryFromBlog_BlogFromUser_Nickname(nickname);
+
+        User user = (User) session.getAttribute("user");
+        log.debug("user: " + user.getNickname());
+
+        List<String> colorList = new ArrayList<>();
+        colorList.add("white");
+        colorList.add("yellow");
+        colorList.add("green");
+        colorList.add("red");
+        session.setAttribute("colorList", colorList);
 
         return "settings/blog-settings";
     }
+
+    @PostMapping("/blog-settings")
+    public String blog_settings(@PathVariable String nickname,
+                                @RequestParam String title,
+                                @RequestParam String image,
+                                HttpSession session) {
+
+        // TODO: 블로그 프로필 수정 - view 작업 직전
+        blogService.initSession(nickname, session);
+
+        log.debug("title: " + title);
+        log.debug("image: " + image);
+
+        User user = (User) session.getAttribute("user");
+        Blog blog;
+        log.debug("user: " + nickname);
+        Optional<Blog> optBlog = blogJpaRepository.findByBlogFromUser_Nickname(nickname);
+
+        if (optBlog.isPresent()) {
+            blog = optBlog.get();
+            if (blog.getBlogFromUser().getUserNo().equals(user.getUserNo())) {
+                blogJpaRepository.save(blogService.builder(blog.getBlogNo(), user, blog.getCount(), title, image));
+            } else {
+                log.debug("블로그 수정 권한이 없습니다.");
+            }
+        }
+
+        return setRedirectUrl(nickname, "settings");
+    }
+
 
     @PostMapping("/update-category")
     public String update_category(@PathVariable String nickname,

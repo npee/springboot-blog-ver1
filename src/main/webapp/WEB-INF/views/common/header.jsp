@@ -9,11 +9,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%--@elvariable id="user" type="User"--%>
 <%--@elvariable id="bloger" type="User"--%>
+<%--@elvariable id="blog" type="Blog"--%>
 <header>
     <h1>header</h1>
     <h2><a href="/">home</a></h2>
-    <c:if test="${not empty bloger}">
-        <h2><a href="<c:url value="/${bloger.nickname}" />">${bloger.nickname}의 블로그</a></h2>
+    <c:if test="${not empty bloger and not empty blog}">
+        <h2><a href="<c:url value="/${bloger.nickname}" />">${blog.title}</a></h2>
     </c:if>
     <c:choose>
         <c:when test="${empty user}">

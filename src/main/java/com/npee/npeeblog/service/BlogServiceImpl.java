@@ -71,6 +71,17 @@ public class BlogServiceImpl implements BlogService, CategoryService, PostServic
     }
 
     @Override
+    public Blog builder(Long blogNo, User user, Long count, String title, String image) {
+        return Blog.builder()
+                .blogNo(blogNo)
+                .count(count)
+                .title(title)
+                .image(image)
+                .blogFromUser(user)
+                .build();
+    }
+
+    @Override
     public Category builder(Blog blog) {
         return builder(blog, "샘플 카테고리");
     }
