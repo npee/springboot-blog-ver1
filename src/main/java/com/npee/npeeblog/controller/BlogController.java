@@ -199,17 +199,11 @@ public class BlogController {
                                   @RequestParam Long userNo,
                                   @PathVariable Long postNo,
                                   @RequestParam String newReply) {
-        // TODO: 댓글 생성...ReplyService interface로 옮기기
-        replyJpaRepository.save(
-            Reply.builder()
-                    .reply(newReply)
-                    .isBlind("false")
-                    .registerDate(LocalDateTime.now().plusHours(9L))
-                    .modifyDate(LocalDateTime.now().plusHours(9L))
-                    .replyFromPost(postJpaRepository.findByPostNo(postNo).get())
-                    .replyFromUser(userJpaRepository.findByUserNo(userNo).get())
-                    .build()
-        );
+
+        Post post = postJpaRepository.findByPostNo(postNo).get();
+        User user = userJpaRepository.findByUserNo(userNo).get();
+        replyJpaRepository.save(blogService.builder(null, newReply, "false", post, user));
+
         return setRedirectUrl(nickname, postNo);
     }
 
@@ -228,7 +222,7 @@ public class BlogController {
         User replier = userJpaRepository.findByUserNo(reply.getReplyFromUser().getUserNo()).get();
         User user = userJpaRepository.findByUserNo(userNo).get();
         User bloger = userJpaRepository.findByNickname(nickname).get();
-        
+
         String blind = reply.getIsBlind();
 
         if (user == replier) {
