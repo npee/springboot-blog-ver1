@@ -33,7 +33,15 @@
             <h2>user: author</h2>
             <h3>새 카테고리(blog-settings로 이전)</h3>
             <h3>글쓰기</h3>
-            <a href="/${user.nickname}/write">글쓰기</a>
+            <c:choose>
+                <c:when test="${empty categories}">
+                    <p>카테고리 목록이 비어있습니다. 새 카테고리를 먼저 생성해주세요.</p>
+                </c:when>
+                <c:otherwise>
+                    <a href="/${user.nickname}/write">글쓰기</a>
+                </c:otherwise>
+            </c:choose>
+
         </c:when>
         <c:otherwise>
             <h2>user: guest(${user.nickname})</h2>

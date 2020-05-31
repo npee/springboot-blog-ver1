@@ -24,6 +24,9 @@
         <h2>write</h2>
         <!-- start -->
         <c:choose>
+            <c:when test="${empty categories}">
+                <p>카테고리를 먼저 생성해주세요.</p>
+            </c:when>
             <c:when test="${user.userNo eq bloger.userNo }">
                 <form action="<c:url value="/${user.nickname}/write" />" method="POST">
                     <label for="category">Select Category</label>
