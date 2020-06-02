@@ -1,6 +1,9 @@
 # springboot-blog
 ## Summary
 ## Update
+### 2020.06.01
+* Create function(Update blog settings)
+* Create function(Delete selected post)
 ### 2020.05.28
 * Update view(Add link)
 ### 2020.05.26
