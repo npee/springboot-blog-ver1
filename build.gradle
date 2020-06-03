@@ -47,7 +47,7 @@ dependencies {
 
     /* Dynamic Web */
     implementation 'org.webjars:jquery:3.4.1'
-    implementation 'org.webjars:bootstrap:4.3.1'
+    // implementation 'org.webjars:bootstrap:4.5.0'
 
     /* View */
     compile group: 'javax.servlet', name: 'jstl', version: '1.2'
