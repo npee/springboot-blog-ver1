@@ -128,7 +128,7 @@ public class UserController {
         log.debug("로그아웃 페이지[GET]");
 
         session.invalidate();
-        return "/sign/signout";
+        return "redirect:/";
     }
 
     // TODO: 사용자 정보 수정
