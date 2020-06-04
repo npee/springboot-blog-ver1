@@ -41,7 +41,7 @@
             </div>
 
             <div class="col-4 text-center">
-                <a class="blog-header-logo text-dark" href="#">Large</a>
+                <a class="blog-header-logo text-dark" href="#">Large라지</a>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
                 <a class="text-muted" href="#" aria-label="Search">
@@ -53,6 +53,8 @@
                         <a class="auth-btn btn btn-sm btn-outline-secondary" href="<c:url value="/user/signin" />">로그인</a>
                     </c:when>
                     <c:otherwise>
+                        <a class="auth-btn btn btn-sm btn-outline-secondary" href="<c:url value="/${user.nickname}/settings" />">설정</a>
+                        <a class="auth-btn btn btn-sm btn-outline-secondary" href="<c:url value="/${user.nickname}" />">내 블로그</a>
                         <a class="auth-btn btn btn-sm btn-outline-secondary" href="<c:url value="/user/signout" />">로그아웃</a>
                     </c:otherwise>
                 </c:choose>
