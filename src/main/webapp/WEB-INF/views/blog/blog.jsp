@@ -7,88 +7,125 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <html>
-<head>
-    <title>title</title>
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/blog/">
+    <head>
+        <title>title</title>
+        <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/blog/">
 
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="<c:url value="/assets/dist/css/bootstrap.css" />">
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="<c:url value="/assets/dist/css/bootstrap.css" />">
 
-    <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
+        <style>
+            .bd-placeholder-img {
+                font-size: 1.125rem;
+                text-anchor: middle;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
             }
-        }
-    </style>
-    <!-- Custom styles for this template -->
-    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
-    <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="<c:url value="/assets/custom/blog.css" />" />
-</head>
-<%--@elvariable id="user" type="User"--%>
-<%--@elvariable id="bloger" type="User"--%>
-<%--@elvariable id="blog" type="Blog"--%>
-<%--@elvariable id="categories" type="List<Category>>"--%>
-<%--@elvariable id="posts" type="List<Post>>"--%>
-<body>
-    <c:import url="/WEB-INF/views/common/header.jsp" />
 
-    <c:import url="/WEB-INF/views/common/footer.jsp" />
+            .write-btn {
+                margin-top: 1.0em;
+            }
 
-    <h1>body</h1>
-    <h2>title: ${blog.title}</h2>
-    <h3>userNo: ${bloger.userNo}</h3>
-    <h3>nickname: ${bloger.nickname}</h3>
-    <h3>email: ${bloger.email}</h3>
-    <h3>registered: ${bloger.registerDate}</h3>
+            .card-text {
+                text-overflow:ellipsis;
+                white-space:nowrap;
+                word-wrap:normal;
+                width:300px;
+                overflow:hidden;
+            }
 
-    <c:choose>
-        <c:when test="${empty user}">
-            <h2>user: empty</h2>
-        </c:when>
-        <c:when test="${user.userNo eq bloger.userNo }">
-            <h2>user: author</h2>
-            <h3>새 카테고리(blog-settings로 이전)</h3>
-            <h3>글쓰기</h3>
-            <c:choose>
-                <c:when test="${empty categories}">
-                    <p>카테고리 목록이 비어있습니다. 새 카테고리를 먼저 생성해주세요.</p>
-                </c:when>
-                <c:otherwise>
-                    <a href="/${user.nickname}/write">글쓰기</a>
-                </c:otherwise>
-            </c:choose>
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                    font-size: 3.5rem;
+                }
+            }
+        </style>
+        <!-- Custom styles for this template -->
+        <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link rel="stylesheet" href="<c:url value="/assets/custom/blog.css" />" />
+    </head>
+    <%--@elvariable id="user" type="User"--%>
+    <%--@elvariable id="bloger" type="User"--%>
+    <%--@elvariable id="blog" type="Blog"--%>
+    <%--@elvariable id="categories" type="List<Category>>"--%>
+    <%--@elvariable id="posts" type="List<Post>>"--%>
+    <body>
+        <c:import url="/WEB-INF/views/common/header.jsp" />
+        <main role="main" class="container">
+            <div class="row">
+                <div class="col-md-8 blog-main">
+                    <div class="row">
+                        <c:choose>
+                            <c:when test="${empty user}">
+                                <div class="col-md-12">
+                                    <h3 class="pb-4 mb-4 border-bottom">
+                                            ${blog.title}
+                                    </h3>
+                                </div>
+                            </c:when>
+                            <c:when test="${user.userNo eq bloger.userNo }">
+                                <div class="col-md-9">
+                                    <h3 class="pt-2 pb-3 mb-4 border-bottom">
+                                            ${blog.title}
+                                    </h3>
+                                </div>
+                                <div class="col-md-3 text-center write-btn">
+                                    <c:choose>
+                                        <c:when test="${empty categories}">
+                                            <a class="auth-btn btn btn-sm btn-outline-secondary" href="/${user.nickname}/settings">카테고리 생성</a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a class="auth-btn btn btn-sm btn-outline-secondary" href="/${user.nickname}/write">글쓰기</a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                            </c:when>
+                        </c:choose>
+                    </div>
 
-        </c:when>
-        <c:otherwise>
-            <h2>user: guest(${user.nickname})</h2>
-        </c:otherwise>
-    </c:choose>
+                    <div class="row mb-2">
+                        <c:forEach items="${posts}" var="post">
+                            <fmt:parseDate value="${post.registerDate}" pattern="yyyy-MM-dd'T'HH:mm" var="registerLDT" type="both" />
+                            <fmt:formatDate value="${registerLDT}" pattern="yyyy년 MM월 dd일" var="postRegisterDate" />
+                            <div class="col-md-12">
+                                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                                    <div class="col p-4 d-flex flex-column position-static">
+                                        <strong class="d-inline-block mb-2 text-primary">${post.postFromCategory.category}</strong>
+                                        <h3 class="mb-0">${post.title}</h3>
+                                        <div class="mb-1 text-muted">${postRegisterDate}</div>
+                                        <p class="card-text mb-auto">${post.body}</p>
+                                        <a href="<c:url value="/${bloger.nickname}/${post.postNo}" />" class="stretched-link">해당 포스트로 이동</a>
+                                    </div>
+                                    <div class="col-auto d-none d-lg-block">
+                                        <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">썸네일</text></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+                <aside class="col-md-4 blog-sidebar">
+                    <div class="p-4 mb-3 bg-light rounded">
+                        <h4 class="font-italic">About</h4>
+                        <p class="mb-0">Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+                    </div>
 
-    <h3>category list</h3>
-    <ul id="category-list">
-        <c:forEach items="${categories}" var="category">
-            <li><a href="<c:url value="/${user.nickname}/categories/${category.categoryNo}" />">${category.category}</a></li>
-        </c:forEach>
-    </ul>
-
-    <h3>post list</h3>
-    <ul id="post-list">
-        <c:forEach items="${posts}" var="post">
-            <li><a href="<c:url value="/${bloger.nickname}/${post.postNo}" />">${post.title}</a></li>
-        </c:forEach>
-    </ul>
-
-</body>
+                    <div class="p-4">
+                        <h4 class="font-italic">카테고리</h4>
+                        <ol class="list-unstyled mb-0">
+                            <c:forEach items="${categories}" var="category">
+                                <li><a href="<c:url value="/${bloger.nickname}/categories/${category.categoryNo}" />">${category.category}</a></li>
+                            </c:forEach>
+                        </ol>
+                    </div>
+                </aside>
+            </div>
+        </main>
+        <c:import url="/WEB-INF/views/common/footer.jsp" />
+    </body>
 </html>
