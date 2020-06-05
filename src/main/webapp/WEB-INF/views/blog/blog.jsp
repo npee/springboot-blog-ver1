@@ -63,15 +63,21 @@
                         <c:choose>
                             <c:when test="${empty user}">
                                 <div class="col-md-12">
-                                    <h3 class="pb-4 mb-4 border-bottom">
-                                            ${blog.title}
+                                    <h3 class="pb-4 mb-4 border-bottom selected-category">
+                                        포스트 목록
+                                        <c:if test="${not empty param.selectedCategory}">
+                                            : ${param.selectedCategory}
+                                        </c:if>
                                     </h3>
                                 </div>
                             </c:when>
                             <c:when test="${user.userNo eq bloger.userNo }">
                                 <div class="col-md-9">
-                                    <h3 class="pt-2 pb-3 mb-4 border-bottom">
-                                            ${blog.title}
+                                    <h3 class="pt-2 pb-3 mb-4 border-bottom selected-category">
+                                        포스트 목록
+                                        <c:if test="${not empty param.selectedCategory}">
+                                            : ${param.selectedCategory}
+                                        </c:if>
                                     </h3>
                                 </div>
                                 <div class="col-md-3 text-center write-btn">
@@ -89,24 +95,51 @@
                     </div>
 
                     <div class="row mb-2">
-                        <c:forEach items="${posts}" var="post">
-                            <fmt:parseDate value="${post.registerDate}" pattern="yyyy-MM-dd'T'HH:mm" var="registerLDT" type="both" />
-                            <fmt:formatDate value="${registerLDT}" pattern="yyyy년 MM월 dd일" var="postRegisterDate" />
-                            <div class="col-md-12">
-                                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                                    <div class="col p-4 d-flex flex-column position-static">
-                                        <strong class="d-inline-block mb-2 text-primary">${post.postFromCategory.category}</strong>
-                                        <h3 class="mb-0">${post.title}</h3>
-                                        <div class="mb-1 text-muted">${postRegisterDate}</div>
-                                        <p class="card-text mb-auto">${post.body}</p>
-                                        <a href="<c:url value="/${bloger.nickname}/${post.postNo}" />" class="stretched-link">해당 포스트로 이동</a>
+                        <c:choose>
+                            <c:when test="${empty param.selectedCategory}">
+                                <c:forEach items="${posts}" var="post">
+                                    <fmt:parseDate value="${post.registerDate}" pattern="yyyy-MM-dd'T'HH:mm" var="registerLDT" type="both" />
+                                    <fmt:formatDate value="${registerLDT}" pattern="yyyy년 MM월 dd일" var="postRegisterDate" />
+                                    <div class="col-md-12">
+                                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                                            <div class="col p-4 d-flex flex-column position-static">
+                                                <strong class="d-inline-block mb-2 text-primary">${post.postFromCategory.category}</strong>
+                                                <h3 class="mb-0">${post.title}</h3>
+                                                <div class="mb-1 text-muted">${postRegisterDate}</div>
+                                                <p class="card-text mb-auto">${post.body}</p>
+                                                <a href="<c:url value="/${bloger.nickname}/${post.postNo}" />" class="stretched-link">해당 포스트로 이동</a>
+                                            </div>
+                                            <div class="col-auto d-none d-lg-block">
+                                                <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">썸네일</text></svg>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-auto d-none d-lg-block">
-                                        <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">썸네일</text></svg>
-                                    </div>
-                                </div>
-                            </div>
-                        </c:forEach>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <c:forEach items="${posts}" var="post">
+                                    <c:if test="${post.postFromCategory.category eq param.selectedCategory}">
+                                        <fmt:parseDate value="${post.registerDate}" pattern="yyyy-MM-dd'T'HH:mm" var="registerLDT" type="both" />
+                                        <fmt:formatDate value="${registerLDT}" pattern="yyyy년 MM월 dd일" var="postRegisterDate" />
+                                        <div class="col-md-12">
+                                            <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                                                <div class="col p-4 d-flex flex-column position-static">
+                                                    <strong class="d-inline-block mb-2 text-primary">${post.postFromCategory.category}</strong>
+                                                    <h3 class="mb-0">${post.title}</h3>
+                                                    <div class="mb-1 text-muted">${postRegisterDate}</div>
+                                                    <p class="card-text mb-auto">${post.body}</p>
+                                                    <a href="<c:url value="/${bloger.nickname}/${post.postNo}" />" class="stretched-link">해당 포스트로 이동</a>
+                                                </div>
+                                                <div class="col-auto d-none d-lg-block">
+                                                    <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">썸네일</text></svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                </c:forEach>
+                            </c:otherwise>
+                        </c:choose>
+
                     </div>
                 </div>
                 <aside class="col-md-4 blog-sidebar">
@@ -119,7 +152,7 @@
                         <h4 class="font-italic">카테고리</h4>
                         <ol class="list-unstyled mb-0">
                             <c:forEach items="${categories}" var="category">
-                                <li><a href="<c:url value="/${bloger.nickname}/categories/${category.categoryNo}" />">${category.category}</a></li>
+                                <li><a href="<c:url value="/${bloger.nickname}?selectedCategory=${category.category}" />">${category.category}</a></li>
                             </c:forEach>
                         </ol>
                     </div>
