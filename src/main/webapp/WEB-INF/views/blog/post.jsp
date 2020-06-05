@@ -106,25 +106,45 @@
 
                 <aside class="col-md-4 blog-sidebar">
                     <div class="p-4 mb-3 bg-light rounded">
-                        <h4 class="font-italic">About</h4>
-                        <p class="mb-0">Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+                        <h4 class="">${bloger.nickname}님의 블로그</h4>
+                        <p class="mb-0">email: ${bloger.email}</p>
+                        <p class="mb-0">기타 프로필</p>
                     </div>
 
                     <div class="p-4">
                         <h4 class="font-italic">카테고리</h4>
                         <ol class="list-unstyled mb-0">
                             <c:forEach items="${categories}" var="category">
-                                <li><a href="<c:url value="/${bloger.nickname}/categories/${category.categoryNo}" />">${category.category}</a></li>
+                                <li><a href="<c:url value="/${bloger.nickname}?selectedCategory=${category.category}" />">${category.category}</a></li>
                             </c:forEach>
                         </ol>
                     </div>
-
-                </aside><!-- /.blog-sidebar -->
+                </aside>
 
             </div><!-- /.row -->
 
-        </main><!-- /.container -->
+            <div> 댓글 컨테이너
+                <div>
+                    <a class="auth-btn btn btn-sm btn-outline-secondary" href="<c:url value="/${bloger.nickname}/${post.postNo}?isCreateReply=true&isUpdateReply=false&isDeleteReply=false" />;return false;">댓글 작성하기</a>
+                    <a class="auth-btn btn btn-sm btn-outline-secondary" href="<c:url value="/${bloger.nickname}/${post.postNo}?isCreateReply=false&isUpdateReply=true&isDeleteReply=false" />;return false;">댓글 수정하기</a>
+                    <a class="auth-btn btn btn-sm btn-outline-secondary" href="<c:url value="/${bloger.nickname}/${post.postNo}?isCreateReply=false&isUpdateReply=false&isDeleteReply=true" />;return false;">댓글 삭제하기</a>
+                </div>
+                <div> 댓글 작성란
 
+                </div>
+                <div>댓글 목록
+
+                </div>
+
+            </div>
+        </main><!-- /.container -->
+        <script>
+            $(".btn-outline-secondary").click(function(e) {
+                e.preventDefault();
+            });
+        </script>
+
+        <c:import url="/WEB-INF/views/common/footer.jsp" />
         <%--
         <c:choose>
             <c:when test="${empty user}">
@@ -140,7 +160,7 @@
                 <h3>${user.userNo}, ${bloger.userNo}</h3>
             </c:otherwise>
         </c:choose>
-        --%>
+
 
         <h3>post list</h3>
         <ul id="post-list">
@@ -158,12 +178,10 @@
             <a href="<c:url value="/${bloger.nickname}/update-post" />">포스트 수정</a>
             <a href="<c:url value="/${bloger.nickname}/delete-post?postNo=${post.postNo}" />">포스트 삭제</a>
         </c:if>
+        --%>
         <%-- 댓글 --%>
         <h3>댓글</h3>
-        <a href="<c:url value="/${bloger.nickname}/${post.postNo}?isCreateReply=true&isUpdateReply=false&isDeleteReply=false" />">댓글 작성하기</a>
-        <a href="<c:url value="/${bloger.nickname}/${post.postNo}?isCreateReply=false&isUpdateReply=true&isDeleteReply=false" />">댓글 수정하기</a>
-        <a href="<c:url value="/${bloger.nickname}/${post.postNo}?isCreateReply=false&isUpdateReply=false&isDeleteReply=true" />">댓글 삭제하기</a>
-        <c:choose>
+       <c:choose>
             <c:when test="${empty user}">
                 <h2>Author: Guest(Anonymous)</h2>
                 <h3>Bloger: ${bloger.userNo}</h3>
@@ -478,6 +496,5 @@
                 </c:choose>
             </c:otherwise>
         </c:choose>
-        <c:import url="/WEB-INF/views/common/footer.jsp" />
     </body>
 </html>

@@ -64,20 +64,28 @@
                             <c:when test="${empty user}">
                                 <div class="col-md-12">
                                     <h3 class="pb-4 mb-4 border-bottom selected-category">
-                                        포스트 목록
-                                        <c:if test="${not empty param.selectedCategory}">
-                                            : ${param.selectedCategory}
-                                        </c:if>
+                                        <c:choose>
+                                            <c:when test="${empty param.selectedCategory}">
+                                                카테고리: 전체
+                                            </c:when>
+                                            <c:otherwise>
+                                                ${param.selectedCategory}
+                                            </c:otherwise>
+                                        </c:choose>
                                     </h3>
                                 </div>
                             </c:when>
                             <c:when test="${user.userNo eq bloger.userNo }">
                                 <div class="col-md-9">
                                     <h3 class="pt-2 pb-3 mb-4 border-bottom selected-category">
-                                        포스트 목록
-                                        <c:if test="${not empty param.selectedCategory}">
-                                            : ${param.selectedCategory}
-                                        </c:if>
+                                        <c:choose>
+                                            <c:when test="${empty param.selectedCategory}">
+                                                카테고리: 전체
+                                            </c:when>
+                                            <c:otherwise>
+                                                ${param.selectedCategory}
+                                            </c:otherwise>
+                                        </c:choose>
                                     </h3>
                                 </div>
                                 <div class="col-md-3 text-center write-btn">
@@ -144,8 +152,9 @@
                 </div>
                 <aside class="col-md-4 blog-sidebar">
                     <div class="p-4 mb-3 bg-light rounded">
-                        <h4 class="font-italic">About</h4>
-                        <p class="mb-0">Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+                        <h4 class=""><a class="text-dark" href="<c:url value="/${bloger.nickname}" />">${bloger.nickname}님의 블로그</a></h4>
+                        <p class="mb-0">email: ${bloger.email}</p>
+                        <p class="mb-0">기타 프로필</p>
                     </div>
 
                     <div class="p-4">
