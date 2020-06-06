@@ -30,14 +30,6 @@
                 margin-top: 1.0em;
             }
 
-            .card-text {
-                text-overflow:ellipsis;
-                white-space:nowrap;
-                word-wrap:normal;
-                width:300px;
-                overflow:hidden;
-            }
-
             @media (min-width: 768px) {
                 .bd-placeholder-img-lg {
                     font-size: 3.5rem;
