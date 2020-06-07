@@ -31,6 +31,48 @@
                 line-height: 40px;
             }
 
+            /*
+            #reply-box {
+                padding: 10px;
+                background-color: #ededed;
+            }
+            */
+
+            #input-reply {
+                margin: 10px;
+                padding: 10px;
+                resize: none;
+            }
+
+            #create-reply-btn {
+                margin-left: 10px;
+            }
+
+            .reply-list:nth-child(2n-1) {
+                /* height: 100px; */
+                display: flex;
+                justify-content: space-between;
+                flex-direction: column;
+                height: 120px;
+                background-color: #eeeeee;
+            }
+
+            .reply-list:nth-child(2n) {
+                display: flex;
+                justify-content: space-between;
+                flex-direction: column;
+                height: 120px;
+                background-color: #e1e1e1;
+            }
+
+            .reply-button-box {
+                padding: 10px;
+            }
+
+            .reply-list p {
+                padding: 10px;
+            }
+
             @media (min-width: 768px) {
                 .bd-placeholder-img-lg {
                     font-size: 3.5rem;
@@ -56,7 +98,7 @@
         <main role="main" class="container">
             <div class="row">
                 <div class="col-md-8 blog-main">
-                    <h3 class="pb-4 mb-4 border-bottom">
+                    <h3 class="pt-2 pb-3 mb-4 border-bottom selected-category">
                         ${post.postFromCategory.category}
                     </h3>
                     <div class="blog-post">
@@ -101,11 +143,17 @@
                             </div>
                         </div>
                     </div>
-
-                    <nav class="blog-pagination">
-                        <a class="btn btn-outline-primary" href="#">Older</a>
-                        <a class="btn btn-outline-secondary disabled" href="#" tabindex="-1" aria-disabled="true">Newer</a>
-                    </nav>
+                    <hr>
+                    <div>
+                        <div class="input-group mb-3 reply-input-box">
+                            <label for="input-reply"></label>
+                            <textarea name="" id="input-reply" cols="100%" rows="4" placeholder="댓글 입력란"></textarea>
+                            <button class="btn btn-primary btn-sm" type="button" id="create-reply-btn">등록</button>
+                        </div>
+                    </div>
+                    <hr>
+                    <div id="reply-box">
+                    </div>
 
                 </div><!-- /.blog-main -->
 
@@ -129,6 +177,8 @@
             </div><!-- /.row -->
 
             <div> 댓글 컨테이너
+
+
                 <div>
                     <a class="auth-btn btn btn-sm btn-outline-secondary" href="<c:url value="/${bloger.nickname}/${post.postNo}?isCreateReply=true&isUpdateReply=false&isDeleteReply=false" />;return false;">댓글 작성하기</a>
                     <a class="auth-btn btn btn-sm btn-outline-secondary" href="<c:url value="/${bloger.nickname}/${post.postNo}?isCreateReply=false&isUpdateReply=true&isDeleteReply=false" />;return false;">댓글 수정하기</a>
@@ -143,11 +193,6 @@
 
             </div>
         </main><!-- /.container -->
-        <script>
-            $(".btn-outline-secondary").click(function(e) {
-                e.preventDefault();
-            });
-        </script>
 
         <c:import url="/WEB-INF/views/common/footer.jsp" />
         <%--
@@ -501,5 +546,50 @@
                 </c:choose>
             </c:otherwise>
         </c:choose>
+        <script src="<c:url value="/webjars/jquery/3.4.1/jquery.min.js" />"></script>
+        <script>
+            $(function() {
+                function fetch_reply() {
+                    $.ajax({
+                        url: "<c:url value="/${bloger.nickname}/${post.postNo}/reply" />",
+                        method: "GET",
+                        success: function(data) {
+                            $("#reply-box").html(data);
+                        },
+                        error: function () {
+                            alert("error");
+                        }
+                    });
+                }
+
+                fetch_reply();
+
+                // 댓글 등록
+                $(document).on("click", "#create-reply-btn", function () {
+                    const inputReply = $("#input-reply").val();
+                    const userNo = '<c:out value="${user.userNo}" /> '
+                    $.ajax({
+                        url: "<c:url value="/${bloger.nickname}/${post.postNo}/create-reply" />",
+                        method: "POST",
+                        data: {
+                            userNo: userNo,
+                            newReply: inputReply,
+                        },
+                        success: function(){
+                            alert("댓글이 등록되었습니다.");
+                            $("#input-reply").val("");
+                            fetch_reply();
+                        },
+                        error: function(data){
+                            alert("error" + data);
+                        }
+                    });
+                });
+                // 댓글 수정
+                // 댓글 블라인드
+                // 댓글 블라인드 해제
+                // 댓글 삭제
+            });
+        </script>
     </body>
 </html>
