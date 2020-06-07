@@ -237,7 +237,6 @@ public class BlogController {
         return setRedirectUrl(nickname, "settings");
     }
 
-
     @PostMapping("/update-category")
     public String update_category(@PathVariable String nickname,
                                   @RequestParam Long updateCategoryNo,
@@ -268,6 +267,30 @@ public class BlogController {
         }
 
         return setRedirectUrl(nickname, "settings");
+    }
+
+    @GetMapping("/{postNo}/reply")
+    public String reply(@PathVariable String nickname,
+                        @PathVariable Long postNo,
+                        HttpSession session) {
+
+        session.removeAttribute("replies");
+        List<Reply> replies;
+        blogService.initSession(nickname, session);
+
+        Optional<User> optBloger = userJpaRepository.findByNickname(nickname);
+        Optional<List<Reply>> optReplyList = replyJpaRepository.findAllByReplyFromPost_PostNo(postNo);
+        if (optBloger.isPresent()) {
+            session.setAttribute("bloger", optBloger.get());
+            if (optReplyList.isPresent()) {
+                replies = optReplyList.get();
+                session.setAttribute("replies", replies);
+            } else {
+                session.setAttribute("emptyReplyMessage", "작성된 댓글이 없습니다.");
+            }
+        }
+
+        return "blog/list-reply";
     }
 
     @PostMapping("/{postNo}/create-reply")
