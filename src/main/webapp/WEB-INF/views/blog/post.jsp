@@ -549,6 +549,10 @@
         <script src="<c:url value="/webjars/jquery/3.4.1/jquery.min.js" />"></script>
         <script>
             $(function() {
+                window.onbeforeunload = function () {
+                    window.scrollTo(0, 0);
+                }
+                
                 function fetch_reply() {
                     $.ajax({
                         url: "<c:url value="/${bloger.nickname}/${post.postNo}/reply" />",
@@ -566,11 +570,11 @@
 
                 // 댓글 등록
                 $(document).on("click", "#create-reply-btn", function () {
-                    const inputReply = $("#input-reply").val();
+                    const inputReply = $("#input-reply");
                     const userNo = '<c:out value="${user.userNo}" />';
                     if (inputReply.length === 0) {
                         alert("댓글을 입력해주세요");
-                        $("#input-reply").focus();
+                        inputReply.focus();
                         return false;
                     }
                     $.ajax({
@@ -582,7 +586,7 @@
                         },
                         success: function(){
                             alert("댓글이 등록되었습니다.");
-                            $("#input-reply").val("");
+                            inputReply.val("");
                             fetch_reply();
                         },
                         error: function(data){
