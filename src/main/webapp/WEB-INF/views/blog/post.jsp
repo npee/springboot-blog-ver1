@@ -567,7 +567,12 @@
                 // 댓글 등록
                 $(document).on("click", "#create-reply-btn", function () {
                     const inputReply = $("#input-reply").val();
-                    const userNo = '<c:out value="${user.userNo}" /> '
+                    const userNo = '<c:out value="${user.userNo}" />';
+                    if (inputReply.length === 0) {
+                        alert("댓글을 입력해주세요");
+                        $("#input-reply").focus();
+                        return false;
+                    }
                     $.ajax({
                         url: "<c:url value="/${bloger.nickname}/${post.postNo}/create-reply" />",
                         method: "POST",
