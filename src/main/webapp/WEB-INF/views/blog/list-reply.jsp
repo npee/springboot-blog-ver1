@@ -5,6 +5,7 @@
 <%--@elvariable id="replies" type="List<Reply>"--%>
 <c:forEach items="${replies}" var="reply">
     <div class="reply-list">
+        <span class="reply-no">${reply.replyNo}</span>
         <c:choose>
             <c:when test="${reply.isBlind eq false}">
                 <p><strong>@${reply.replyFromUser.nickname} </strong>${reply.reply}</p>
@@ -17,16 +18,16 @@
             <c:if test="${not empty user}">
                 <c:choose>
                     <c:when test="${user.userNo eq reply.replyFromUser.userNo}">
-                        <button id="update-reply-btn" class="btn btn-primary btn-sm" type="button">수정</button>
-                        <button id="delete-reply-btn" class="btn btn-danger btn-sm" type="button">삭제</button>
+                        <button class="btn btn-primary btn-sm update-reply-btn" type="button">수정</button>
+                        <button class="btn btn-danger btn-sm delete-reply-btn" type="button">삭제</button>
                     </c:when>
                     <c:when test="${user.userNo eq bloger.userNo}">
                         <c:choose>
                             <c:when test="${reply.isBlind eq false}">
-                                <button id="blind-enable-reply-btn" class="btn btn-warning btn-sm" type="button">블라인드</button>
+                                <button class="btn btn-warning btn-sm blind-enable-reply-btn" type="button">블라인드</button>
                             </c:when>
                             <c:when test="${reply.isBlind eq true}">
-                                <button id="blind-disable-reply-btn" class="btn btn-warning btn-sm" type="button">블라인드 해제</button>
+                                <button class="btn btn-warning btn-sm blind-disable-reply-btn" type="button">블라인드 해제</button>
                             </c:when>
                             <c:otherwise>
                                 <p>Blind confusion?</p>
