@@ -294,7 +294,7 @@ public class BlogController {
     }
 
     @PostMapping("/{postNo}/create-reply")
-    public String create_category(@PathVariable String nickname,
+    public String create_reply(@PathVariable String nickname,
                                   @RequestParam Long userNo,
                                   @PathVariable Long postNo,
                                   @RequestParam String newReply) {
