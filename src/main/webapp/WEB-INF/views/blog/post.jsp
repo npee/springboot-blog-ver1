@@ -10,6 +10,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <fmt:parseDate value="${post.registerDate}" pattern="yyyy-MM-dd'T'HH:mm" var="registerLDT" type="both" />
 <fmt:formatDate value="${registerLDT}" pattern="yyyy년 MM월 dd일" var="postRegisterDate" />
+<%--@elvariable id="user" type="User"--%>
+<%--@elvariable id="bloger" type="User"--%>
+<%--@elvariable id="blog" type="Blog"--%>
+<%--@elvariable id="categories" type="List<Category>"--%>
+<%--@elvariable id="post" type="Post"--%>
+<%--@elvariable id="posts" type="List<Post>"--%>
+<%--@elvariable id="categoryName" type="String"--%>
+<%--@elvariable id="replies" type="List<Reply>"--%>
+<%--@elvariable id="emptyReplyMessage" type="String"--%>
 <html>
     <head>
         <title>post</title>
@@ -48,20 +57,23 @@
                 margin-left: 10px;
             }
 
-            .reply-list:nth-child(2n-1) {
-                /* height: 100px; */
+            .reply-list {
                 display: flex;
                 justify-content: space-between;
                 flex-direction: column;
                 height: 120px;
+            }
+
+            .reply-list .reply-no {
+                display: none;
+            }
+
+            .reply-list:nth-child(2n-1) {
+                /* height: 100px; */
                 background-color: #eeeeee;
             }
 
             .reply-list:nth-child(2n) {
-                display: flex;
-                justify-content: space-between;
-                flex-direction: column;
-                height: 120px;
                 background-color: #e1e1e1;
             }
 
@@ -84,15 +96,6 @@
         <!-- Custom styles for this template -->
         <link rel="stylesheet" href="<c:url value="/assets/custom/blog.css" />" />
     </head>
-    <%--@elvariable id="user" type="User"--%>
-    <%--@elvariable id="bloger" type="User"--%>
-    <%--@elvariable id="blog" type="Blog"--%>
-    <%--@elvariable id="categories" type="List<Category>"--%>
-    <%--@elvariable id="post" type="Post"--%>
-    <%--@elvariable id="posts" type="List<Post>"--%>
-    <%--@elvariable id="categoryName" type="String"--%>
-    <%--@elvariable id="replies" type="List<Reply>"--%>
-    <%--@elvariable id="emptyReplyMessage" type="String"--%>
     <body>
         <c:import url="/WEB-INF/views/common/header.jsp" />
         <main role="main" class="container">
@@ -500,46 +503,6 @@
                                         </c:choose>
                                     </c:forEach>
                                 </c:when>
-                                <c:when test="${param.isDeleteReply eq true}">
-                                    <p>댓글 삭제 폼</p>
-                                    <c:if test="${param.isDeleteReply eq true}">
-                                        <c:forEach items="${replies}" var="reply">
-                                            <c:if test="${reply.replyNo eq param.deleteReplyNo and reply.replyFromUser.userNo eq user.userNo}">
-                                                <form action="<c:url value="/${bloger.nickname}/${post.postNo}/delete-reply" />" method="POST">
-                                                    <input type="hidden" name="userNo" value="${user.userNo}">
-                                                    <input type="hidden" name="replyNo" value="${reply.replyNo}">
-                                                    <p>내용</p>
-                                                    <p>${reply.reply}</p>
-                                                    <input type="submit" value="삭제">
-                                                </form>
-                                            </c:if>
-                                        </c:forEach>
-                                    </c:if>
-                                    <c:forEach items="${replies}" var="reply">
-                                        <c:choose>
-                                            <c:when test="${user.userNo eq reply.replyFromUser.userNo}">
-                                                <li>
-                                                    <p>작성자: ${reply.replyFromUser.nickname}</p>
-                                                    <p>내용: ${reply.reply}</p>
-                                                    <a href="<c:url value="/${bloger.nickname}/${post.postNo}?isDeleteReply=true&deleteReplyNo=${reply.replyNo}" />">삭제</a>
-                                                </li>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <li>
-                                                    <p>작성자: ${reply.replyFromUser.nickname}</p>
-                                                    <c:choose>
-                                                        <c:when test="${reply.isBlind eq true}">
-                                                            <p>블라인드 처리된 댓글입니다.</p>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <p>내용: ${reply.reply}</p>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </li>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </c:forEach>
-                                </c:when>
                             </c:choose>
                         </ul>
                     </c:otherwise>
@@ -552,7 +515,7 @@
                 window.onbeforeunload = function () {
                     window.scrollTo(0, 0);
                 }
-                
+
                 function fetch_reply() {
                     $.ajax({
                         url: "<c:url value="/${bloger.nickname}/${post.postNo}/reply" />",
@@ -584,20 +547,53 @@
                             userNo: userNo,
                             newReply: inputReply,
                         },
-                        success: function(){
+                        success: function() {
                             alert("댓글이 등록되었습니다.");
                             inputReply.val("");
                             fetch_reply();
                         },
-                        error: function(data){
+                        error: function(data) {
                             alert("error" + data);
                         }
                     });
                 });
                 // 댓글 수정
+                $(document).on("click", ".update-reply-btn", function () {
+                    const userNo = '<c:out value="${user.userNo}" />';
+                });
                 // 댓글 블라인드
+                $(document).on("click", ".blind-enable-reply-btn", function () {
+                    const userNo = '<c:out value="${user.userNo}" />';
+                });
                 // 댓글 블라인드 해제
+                $(document).on("click", ".blind-disable-reply-btn", function () {
+                    const userNo = '<c:out value="${user.userNo}" />';
+                });
                 // 댓글 삭제
+                $(document).on("click", ".delete-reply-btn", function () {
+                    const userNo = '<c:out value="${user.userNo}" />';
+                    <%-- 포스트의 모든 댓글의 번호를 불러오는 중이다. --%>
+                    const replyNo = $(this).parent().parent().children(".reply-no").text();
+                    if (confirm("댓글을 삭제하시겠습니까?")) {
+                        $.ajax({
+                            url: "<c:url value="/${bloger.nickname}/${post.postNo}/delete-reply" />",
+                            method: "POST",
+                            data: {
+                                userNo: userNo,
+                                replyNo: replyNo,
+                            },
+                            success: function() {
+                                fetch_reply();
+                            },
+                            error: function(data) {
+                                alert("error" + data);
+                            }
+                        });
+                        // alert(replyNo);
+                    } else {
+                        fetch_reply();
+                    }
+                });
             });
         </script>
     </body>
