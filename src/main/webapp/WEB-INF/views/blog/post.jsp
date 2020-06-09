@@ -195,23 +195,6 @@
                 </aside>
 
             </div><!-- /.row -->
-
-            <div> 댓글 컨테이너
-
-
-                <div>
-                    <a class="auth-btn btn btn-sm btn-outline-secondary" href="<c:url value="/${bloger.nickname}/${post.postNo}?isCreateReply=true&isUpdateReply=false&isDeleteReply=false" />;return false;">댓글 작성하기</a>
-                    <a class="auth-btn btn btn-sm btn-outline-secondary" href="<c:url value="/${bloger.nickname}/${post.postNo}?isCreateReply=false&isUpdateReply=true&isDeleteReply=false" />;return false;">댓글 수정하기</a>
-                    <a class="auth-btn btn btn-sm btn-outline-secondary" href="<c:url value="/${bloger.nickname}/${post.postNo}?isCreateReply=false&isUpdateReply=false&isDeleteReply=true" />;return false;">댓글 삭제하기</a>
-                </div>
-                <div> 댓글 작성란
-
-                </div>
-                <div>댓글 목록
-
-                </div>
-
-            </div>
         </main><!-- /.container -->
 
         <c:import url="/WEB-INF/views/common/footer.jsp" />
