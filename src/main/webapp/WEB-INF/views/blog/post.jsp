@@ -617,9 +617,6 @@
                         fetch_reply();
                         $("#create-reply-btn").attr("disabled", "false");
                     });
-
-                    // alert(updatedReply);
-                    // alert(updateReplyBox);
                 });
                 // 댓글 블라인드
                 $(document).on("click", ".blind-enable-reply-btn", function () {

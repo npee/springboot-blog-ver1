@@ -20,7 +20,14 @@
             <c:if test="${not empty user}">
                 <c:choose>
                     <c:when test="${user.userNo eq reply.replyFromUser.userNo}">
-                        <button class="btn btn-primary btn-sm update-reply-btn" type="button" value="${reply.replyNo}">수정</button>
+                        <c:choose>
+                            <c:when test="${reply.isBlind eq true}">
+                                <button class="btn btn-primary btn-sm update-reply-btn" type="button" value="${reply.replyNo}" disabled="disabled">수정</button>
+                            </c:when>
+                            <c:otherwise>
+                                <button class="btn btn-primary btn-sm update-reply-btn" type="button" value="${reply.replyNo}">수정</button>
+                            </c:otherwise>
+                        </c:choose>
                         <button class="btn btn-danger btn-sm delete-reply-btn" type="button" value="${reply.replyNo}">삭제</button>
                     </c:when>
                     <c:when test="${user.userNo eq bloger.userNo}">
