@@ -516,6 +516,8 @@
                     window.scrollTo(0, 0);
                 }
 
+                let userNo = '<c:out value="${user.userNo}" />';
+
                 function fetch_reply() {
                     $.ajax({
                         url: "<c:url value="/${bloger.nickname}/${post.postNo}/reply" />",
@@ -534,7 +536,7 @@
                 // 댓글 등록
                 $(document).on("click", "#create-reply-btn", function () {
                     const inputReply = $("#input-reply");
-                    const userNo = '<c:out value="${user.userNo}" />';
+                    // const userNo = '<c:out value="${user.userNo}" />';
                     if (inputReply.length === 0) {
                         alert("댓글을 입력해주세요");
                         inputReply.focus();
@@ -559,20 +561,56 @@
                 });
                 // 댓글 수정
                 $(document).on("click", ".update-reply-btn", function () {
-                    const userNo = '<c:out value="${user.userNo}" />';
+                    const replyNo = $(this).parent().parent().children(".reply-no").text();
                 });
                 // 댓글 블라인드
                 $(document).on("click", ".blind-enable-reply-btn", function () {
-                    const userNo = '<c:out value="${user.userNo}" />';
+                    const replyNo = $(this).parent().parent().children(".reply-no").text();
+                    if (confirm("블라인드 처리하시겠습니까?")) {
+                        $.ajax({
+                            url: "<c:url value="/${bloger.nickname}/${post.postNo}/update-reply" />",
+                            method: "POST",
+                            data: {
+                                userNo: userNo,
+                                replyNo: replyNo,
+                                isBlind: "true",
+                            },
+                            success: function() {
+                                fetch_reply();
+                            },
+                            error: function(data) {
+                                alert("error" + data);
+                            }
+                        });
+                    } else {
+                        fetch_reply();
+                    }
                 });
                 // 댓글 블라인드 해제
                 $(document).on("click", ".blind-disable-reply-btn", function () {
-                    const userNo = '<c:out value="${user.userNo}" />';
+                    const replyNo = $(this).parent().parent().children(".reply-no").text();
+                    if (confirm("블라인드 해제하시겠습니까?")) {
+                        $.ajax({
+                            url: "<c:url value="/${bloger.nickname}/${post.postNo}/update-reply" />",
+                            method: "POST",
+                            data: {
+                                userNo: userNo,
+                                replyNo: replyNo,
+                                isBlind: "false",
+                            },
+                            success: function() {
+                                fetch_reply();
+                            },
+                            error: function(data) {
+                                alert("error" + data);
+                            }
+                        });
+                    } else {
+                        fetch_reply();
+                    }
                 });
                 // 댓글 삭제
                 $(document).on("click", ".delete-reply-btn", function () {
-                    const userNo = '<c:out value="${user.userNo}" />';
-                    <%-- 포스트의 모든 댓글의 번호를 불러오는 중이다. --%>
                     const replyNo = $(this).parent().parent().children(".reply-no").text();
                     if (confirm("댓글을 삭제하시겠습니까?")) {
                         $.ajax({
@@ -589,7 +627,6 @@
                                 alert("error" + data);
                             }
                         });
-                        // alert(replyNo);
                     } else {
                         fetch_reply();
                     }

@@ -323,7 +323,7 @@ public class BlogController {
                                @PathVariable Long postNo,
                                @RequestParam Long replyNo,
                                @RequestParam(required = false) String isBlind,
-                               @RequestParam String updatedReply) {
+                               @RequestParam(required = false) String updatedReply) {
 
         Reply reply = new Reply();
         Post post = new Post();
@@ -361,10 +361,11 @@ public class BlogController {
             }
         } else {
             if (user == bloger) {
-                if (isBlind.equals("true")) {
-                    replyJpaRepository.save(blogService.builder(replyNo, updatedReply, "true", post, replier));
+
+                if ("true".equals(isBlind)) {
+                    replyJpaRepository.save(blogService.builder(replyNo, reply.getReply(), "true", post, replier));
                 } else {
-                    replyJpaRepository.save(blogService.builder(replyNo, updatedReply, "false", post, replier));
+                    replyJpaRepository.save(blogService.builder(replyNo, reply.getReply(), "false", post, replier));
                 }
             }
         }
