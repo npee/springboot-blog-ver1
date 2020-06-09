@@ -47,21 +47,34 @@
             }
             */
 
-            #input-reply {
-                margin: 10px;
-                padding: 10px;
+            textarea {
                 resize: none;
             }
 
-            #create-reply-btn {
+            #input-reply, .update-reply {
+                margin: 10px;
+                padding: 10px;
+            }
+
+            #update-reply-box {
+                display: block;
+                margin: 10px 10px 0 10px;
+            }
+
+            #create-reply-btn  {
                 margin-left: 10px;
+            }
+
+            .update-reply-reset-btn {
+                margin-left: 4px;
             }
 
             .reply-list {
                 display: flex;
                 justify-content: space-between;
                 flex-direction: column;
-                height: 120px;
+                /* height: 120px; */
+                height: auto;
             }
 
             .reply-list .reply-no {
@@ -83,6 +96,10 @@
 
             .reply-list p {
                 padding: 10px;
+            }
+
+            .reply-list strong {
+                padding: 10px 10px 0 10px;
             }
 
             @media (min-width: 768px) {
@@ -561,7 +578,48 @@
                 });
                 // 댓글 수정
                 $(document).on("click", ".update-reply-btn", function () {
+                    $(".reply-button-box button").attr("disabled", "true");
+                    $("#create-reply-btn").attr("disabled", "true");
                     const replyNo = $(this).parent().parent().children(".reply-no").text();
+                    const currentReply = $(this).parent().siblings("p").text();
+                    const replyBox = $(this).parent().parent(".reply-list");
+                    replyBox.children("strong").css("display", "none");
+                    replyBox.children("p").css("display", "none");
+                    replyBox.prepend('<div id="update-reply-box"></div>');
+                    $("#update-reply-box").append('<div class="input-group reply-input-box"><textarea name="" id="update-reply" cols="100%" rows="4">' + currentReply + '</textarea></div>');
+                    replyBox.children(".reply-button-box").children("button").css("display", "none");
+                    replyBox.children(".reply-button-box").append('<button class="btn btn-primary btn-sm update-reply-confirm-btn" type="button">확인</button>');
+                    replyBox.children(".reply-button-box").append('<button class="btn btn-danger btn-sm update-reply-reset-btn" type="button">취소</button>');
+                    $(document).on("click", ".update-reply-confirm-btn", function() {
+                        if (confirm("댓글을 수정하시겠습니까?")) {
+                            const updatedReply = $("#update-reply").val();
+                            $.ajax({
+                                url: "<c:url value="/${bloger.nickname}/${post.postNo}/update-reply" />",
+                                method: "POST",
+                                data: {
+                                    userNo: userNo,
+                                    replyNo: replyNo,
+                                    updatedReply: updatedReply,
+                                },
+                                success: function() {
+                                    fetch_reply();
+                                    $("#create-reply-btn").attr("disabled", "false");
+                                },
+                                error: function(data) {
+                                    alert("error" + data);
+                                }
+                            });
+                        } else {
+                            fetch_reply();
+                        }
+                    });
+                    $(document).on("click", ".update-reply-reset-btn", function() {
+                        fetch_reply();
+                        $("#create-reply-btn").attr("disabled", "false");
+                    });
+
+                    // alert(updatedReply);
+                    // alert(updateReplyBox);
                 });
                 // 댓글 블라인드
                 $(document).on("click", ".blind-enable-reply-btn", function () {

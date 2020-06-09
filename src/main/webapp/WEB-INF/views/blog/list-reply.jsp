@@ -8,10 +8,12 @@
         <span class="reply-no">${reply.replyNo}</span>
         <c:choose>
             <c:when test="${reply.isBlind eq false}">
-                <p><strong>@${reply.replyFromUser.nickname} </strong>${reply.reply}</p>
+                <strong>@${reply.replyFromUser.nickname}</strong>
+                <p>${reply.reply}</p>
             </c:when>
             <c:otherwise>
-                <p><strong>@${reply.replyFromUser.nickname} </strong>블라인드 처리된 댓글입니다.</p>
+                <strong>@${reply.replyFromUser.nickname}</strong>
+                <p>블라인드 처리된 댓글입니다.</p>
             </c:otherwise>
         </c:choose>
         <div class="reply-button-box">
