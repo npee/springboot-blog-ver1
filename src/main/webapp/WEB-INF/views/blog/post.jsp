@@ -245,12 +245,10 @@
 
                     if (userNo == null || userNo === '') {
                         alert("로그인이 필요한 서비스입니다.");
+                    } else if (inputReply.val().trim() === '') {
+                        alert("댓글을 입력해주세요");
+                        inputReply.focus();
                     } else {
-                        if (inputReply.length === 0) {
-                            alert("댓글을 입력해주세요");
-                            inputReply.focus();
-                            return false;
-                        }
                         $.ajax({
                             url: "<c:url value="/${bloger.nickname}/${post.postNo}/create-reply" />",
                             method: "POST",
