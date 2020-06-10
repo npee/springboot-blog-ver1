@@ -40,67 +40,6 @@
                 line-height: 40px;
             }
 
-            /*
-            #reply-box {
-                padding: 10px;
-                background-color: #ededed;
-            }
-            */
-
-            textarea {
-                resize: none;
-            }
-
-            #input-reply, .update-reply {
-                margin: 10px;
-                padding: 10px;
-            }
-
-            #update-reply-box {
-                display: block;
-                margin: 10px 10px 0 10px;
-            }
-
-            #create-reply-btn  {
-                margin-left: 10px;
-            }
-
-            .update-reply-reset-btn {
-                margin-left: 4px;
-            }
-
-            .reply-list {
-                display: flex;
-                justify-content: space-between;
-                flex-direction: column;
-                /* height: 120px; */
-                height: auto;
-            }
-
-            .reply-list .reply-no {
-                display: none;
-            }
-
-            .reply-list:nth-child(2n-1) {
-                /* height: 100px; */
-                background-color: #eeeeee;
-            }
-
-            .reply-list:nth-child(2n) {
-                background-color: #e1e1e1;
-            }
-
-            .reply-button-box {
-                padding: 10px;
-            }
-
-            .reply-list p {
-                padding: 10px;
-            }
-
-            .reply-list strong {
-                padding: 10px 10px 0 10px;
-            }
 
             @media (min-width: 768px) {
                 .bd-placeholder-img-lg {
@@ -264,6 +203,7 @@
                     replyBox.children(".reply-button-box").children("button").css("display", "none");
                     replyBox.children(".reply-button-box").append('<button class="btn btn-primary btn-sm update-reply-confirm-btn" type="button">확인</button>');
                     replyBox.children(".reply-button-box").append('<button class="btn btn-danger btn-sm update-reply-reset-btn" type="button">취소</button>');
+
                     $(document).on("click", ".update-reply-confirm-btn", function() {
                         if (confirm("댓글을 수정하시겠습니까?")) {
                             const updatedReply = $("#update-reply").val();
