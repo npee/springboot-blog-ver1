@@ -1,4 +1,11 @@
-#update-category-icon, #create-category-icon, #delete-category-icon {
+#category-box-head {
+}
+
+.category-no {
+    display: none;
+}
+
+#update-category-icon, #create-category-icon, .delete-category-icon {
     position: absolute;
     width: 1.5em;
     height: 1.5em;
@@ -6,4 +13,9 @@
     top: 50%;
     transform: translate(-50%, -50%);
     cursor: pointer;
+}
+
+.category-name, .category-description {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }

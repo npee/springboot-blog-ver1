@@ -70,7 +70,7 @@
                             </div>
                             <div class="category-form form-row">
                                 <div class="form-group col-md-1">
-                                    <img id="create-category-icon" src="<c:url value="/assets/icons/plus-square.svg" />" alt="" title="Plus">
+                                    <img id="create-category-icon" src="<c:url value="/assets/icons/plus-square.svg" />" alt="" title="카테고리 추가">
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="category-name"></label>
@@ -155,6 +155,28 @@
                                 alert("error" + data);
                             }
                         });
+                    }
+                });
+
+                $(document).on("click", ".delete-category-icon", function () {
+                    const categoryNo = $(this).siblings(".category-no").text();
+                    alert(categoryNo);
+                    if (confirm("카테고리를 삭제하시겠습니까?")) {
+                        $.ajax({
+                            url: "<c:url value="/${bloger.nickname}/delete-category" />",
+                            method: "POST",
+                            data: {
+                                deleteCategoryNo: categoryNo,
+                            },
+                            success: function() {
+                                fetch_category();
+                            },
+                            error: function(data) {
+                                alert("error" + data);
+                            }
+                        });
+                    } else {
+                        fetch_category();
                     }
                 });
 
