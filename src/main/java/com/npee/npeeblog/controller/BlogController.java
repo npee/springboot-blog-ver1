@@ -160,8 +160,12 @@ public class BlogController {
     }
 
     @GetMapping("/categories")
-    public String getCategories() {
-        return "redirect:/";
+    public String getCategories(@PathVariable String nickname,
+                                HttpSession session) {
+
+        blogService.initSession(nickname, session);
+
+        return "settings/list-category";
     }
 
     @PostMapping("/category")
@@ -205,7 +209,7 @@ public class BlogController {
         colorList.add("red");
         session.setAttribute("colorList", colorList);
 
-        return "settings/blog-settings";
+        return "settings/settings";
     }
 
     @PostMapping("/blog-settings")
@@ -245,6 +249,7 @@ public class BlogController {
 
         Blog blog;
         Optional<Blog> optBlog = blogJpaRepository.findByBlogFromUser_Nickname(nickname);
+
         if (optBlog.isPresent()) {
             blog = optBlog.get();
             categoryJpaRepository.save(blogService.builder(blog, updateCategoryNo, categoryName, categoryDescription));
