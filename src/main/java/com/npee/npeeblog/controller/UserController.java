@@ -112,15 +112,19 @@ public class UserController {
          * 로그인 성공 시 사용자 정보를 세션에 등록
          * TODO: 로그인 예외 방어 코드 작성(orElseThrow() 메서드?)
          */
-        User user = userJpaRepository.findByEmailAndPassword(email, password).get();
-        session.setAttribute("user", user);
+        Optional<User> optUser = userJpaRepository.findByEmailAndPassword(email, password);
 
-        /**
-         * 로그인 직전 페이지로 이동하기 위해 세션에 등록된 referer로 리다이렉트
-         */
-        String referer = (String) session.getAttribute("referer");
-        log.debug("로그인 하기 전 페이지로 리다이렉트됩니다..." + referer);
-        return "redirect:" + referer;
+        if (optUser.isPresent()) {
+            session.setAttribute("user", optUser.get());
+            /**
+             * 로그인 직전 페이지로 이동하기 위해 세션에 등록된 referer로 리다이렉트
+             */
+            String referer = (String) session.getAttribute("referer");
+            log.debug("로그인 하기 전 페이지로 리다이렉트됩니다..." + referer);
+            return "redirect:" + referer;
+        } else {
+            return "redirect:/sign/signin";
+        }
     }
 
     @GetMapping("/signout")

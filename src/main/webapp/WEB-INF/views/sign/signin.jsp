@@ -53,8 +53,33 @@
                     <input type="checkbox" value="remember-me"> Remember me
                 </label>
             </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            <button id="signin-btn" class="btn btn-lg btn-primary btn-block" type="button">Sign in</button>
             <p class="mt-5 mb-3 text-muted">&copy; 2017-2020</p>
         </form>
+    <script src="<c:url value="/webjars/jquery/3.4.1/jquery.min.js" />"></script>
+    <script>
+        $(function() {
+            $(document).on("click", "#signin-btn", function() {
+                const email = $("#inputEmail").val();
+                const password = $("#inputPassword").val();
+                const referer = '<c:out value="${referer}" />';
+                $.ajax({
+                    url: "<c:url value="/user/signin" />",
+                    method: "POST",
+                    data: {
+                        email: email,
+                        password: password,
+                    },
+                    success: function(data) {
+                        location.href = referer;
+                    },
+                    error: function(data) {
+                        alert("아이디와 비밀번호를 다시 확인해 주세요");
+                        $("#inputPassword").val("");
+                    }
+                });
+            });
+        });
+    </script>
     </body>
 </html>
