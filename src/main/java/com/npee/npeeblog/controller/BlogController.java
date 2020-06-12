@@ -39,7 +39,7 @@ public class BlogController {
         blogService.initSession(nickname, session);
 
 
-
+        log.debug("블로그 페이지");
         return "blog/blog";
     }
 
@@ -200,7 +200,12 @@ public class BlogController {
         blogService.initSession(nickname, session);
 
         User user = (User) session.getAttribute("user");
-        log.debug("user: " + user.getNickname());
+
+        if (user == null || !nickname.equals(user.getNickname())) {
+            log.debug("잘못된 접근입니다.");
+            return "redirect:/";
+        }
+        // log.debug("user: " + user.getNickname());
 
         List<String> colorList = new ArrayList<>();
         colorList.add("white");
