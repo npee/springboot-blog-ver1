@@ -29,7 +29,7 @@
         <img class="update-icon confirm-icon" src="<c:url value="/assets/icons/check-square.svg" />" alt="" title="수정 확인">
     </div>
     <div class="col-md-8 update-category-box">
-        <p class="category-desc-dummy">&nbsp;</p>
+        <p class="category-p">&nbsp;</p>
     </div>
 </div>
 </c:forEach>

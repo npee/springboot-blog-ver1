@@ -55,7 +55,7 @@
                         <c:choose>
                             <c:when test="${empty user}">
                                 <div class="col-md-12">
-                                    <h3 class="pb-4 mb-4 border-bottom selected-category">
+                                    <h3 class="pt-2 pb-3 mb-4 border-bottom selected-category">
                                         <c:choose>
                                             <c:when test="${empty param.selectedCategory}">
                                                 카테고리: 전체
