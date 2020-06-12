@@ -30,17 +30,13 @@
                 line-height: 40px;
             }
 
-            .category-box-head {
+            #category-box-head {
                 border-bottom-style: solid;
                 border-bottom-color: #5a6268;
             }
 
             .category-box-head > div:first-child {
                 text-align: center;
-            }
-
-            .category-name, .category-description {
-                padding: 0 12px;
             }
 
         </style>
@@ -54,20 +50,16 @@
                     <h3 class="pt-2 pb-3 mb-4 border-bottom selected-category">
                         Settings
                     </h3>
-                    <div id="settings-user">
-
-                    </div>
-                    <div id="settings-blog">
-                        <div id="blog-basic">
-                        </div>
+                    <div id="settings"></div>
+                    <hr>
+                    <div>
                         <div id="blog-category">
                             <div id="category-box-head" class="form-row">
                                 <div class="col-md-1"></div>
                                 <div class="col-md-3"><p class="category-name">카테고리</p></div>
                                 <div class="col-md-8"><p class="category-description">설명</p></div>
                             </div>
-                            <div id="category-box">
-                            </div>
+                            <div id="category-box"></div>
                             <div class="category-form form-row">
                                 <div class="form-group col-md-1">
                                     <img id="create-category-icon" src="<c:url value="/assets/icons/plus-square.svg" />" alt="" title="카테고리 추가">
@@ -109,8 +101,44 @@
         <c:import url="/WEB-INF/views/common/footer.jsp" />
         <script src="<c:url value="/webjars/jquery/3.4.1/jquery.min.js" />"></script>
         <script>
-            $(function() {
+            $(document).ready(function() {
                 let userNo = '<c:out value="${user.userNo}" />';
+                let blogTitle = '<c:out value="${blog.title}" />';
+
+                function fetch_settings() {
+
+                    $.ajax({
+                        url: "<c:url value="/${bloger.nickname}/blog-settings" />",
+                        method: "GET",
+                        success: function(data) {
+                            $("#settings").html(data);
+                            $("#blog-title").val(blogTitle);
+                        },
+                        error: function () {
+                            alert("error");
+                        }
+                    });
+                }
+
+                $(document).on("click", "#update-title-btn", function () {
+                    const updatedBlogTitle = $("#blog-title").val();
+                    $.ajax({
+                        url: "<c:url value="/${bloger.nickname}/blog-settings" />",
+                        method: "POST",
+                        data: {
+                            title: updatedBlogTitle,
+                            image: "white",
+                        },
+                        success: function () {
+                            alert("블로그 제목이 변경되었습니다.");
+                            blogTitle = updatedBlogTitle;
+                            fetch_settings();
+                        },
+                        error: function (data) {
+                            alert("error" + data);
+                        }
+                    });
+                });
 
                 function fetch_category() {
                     $.ajax({
@@ -125,6 +153,7 @@
                     });
                 }
 
+                fetch_settings();
                 fetch_category();
 
                 $(document).on("click", "#create-category-icon", function () {

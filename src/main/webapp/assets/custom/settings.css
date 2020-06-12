@@ -15,9 +15,10 @@
     cursor: pointer;
 }
 
-.category-name, .category-description, .category-desc-dummy {
+.category-p, .blog-p {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+    padding: 0 12px;
 }
 
 .update-category-box {

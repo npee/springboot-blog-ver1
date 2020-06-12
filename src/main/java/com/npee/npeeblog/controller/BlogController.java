@@ -217,6 +217,15 @@ public class BlogController {
         return "settings/settings";
     }
 
+    @GetMapping("/blog-settings")
+    public String getSettings(@PathVariable String nickname,
+                              HttpSession session) {
+        blogService.initSession(nickname, session);
+
+        return "settings/blog-settings";
+
+    }
+
     @PostMapping("/blog-settings")
     public String blog_settings(@PathVariable String nickname,
                                 @RequestParam String title,
