@@ -118,7 +118,7 @@
                                         <c:if test="${item.postNo eq nextNo}">
                                             <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative card-box">
                                                 <div class="col p-4 d-flex flex-column position-static">
-                                                    <strong class="d-inline-block mb-2 text-primary">Before</strong>
+                                                    <strong class="d-inline-block mb-2 text-primary">After</strong>
                                                     <h3 class="mb-0 card-text">${item.title}</h3>
                                                     <div class="mb-1 text-muted">${postRegisterDate}</div>
                                                     <p class="card-text mb-auto">${item.body}</p>
