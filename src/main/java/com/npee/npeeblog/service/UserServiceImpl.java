@@ -28,4 +28,13 @@ public class UserServiceImpl implements UserService {
                 .registerDate(LocalDateTime.now().plusHours(9L))
                 .build();
     }
+
+    public User builder(Long userNo, String email, String password, String nickname) {
+        return User.builder()
+                .userNo(userNo)
+                .email(email)
+                .password(password)
+                .nickname(nickname)
+                .build();
+    }
 }

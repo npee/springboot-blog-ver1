@@ -4,4 +4,5 @@ import com.npee.npeeblog.model.entity.User;
 
 public interface UserService {
     User builder(String email, String password, String nickname);
+    User builder(Long userNo, String email, String password, String nickname);
 }
