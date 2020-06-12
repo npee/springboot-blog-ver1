@@ -159,11 +159,10 @@
                 });
 
                 $(document).on("click", ".update-category-icon", function() {
+                    $(".update-category-icon").css("display", "none");
                     $(this).parent().siblings(".update-category-box").css("display", "block");
                     $(this).parent().siblings(".form-group").children(".category-p").css("display", "none");
                     $(this).parent().siblings(".form-group").children(".update-input").css("display", "block");
-                    const categoryNo = $(this).parent().siblings(".update-icon-box").children(".category-no").text();
-                    alert(categoryNo);
                 });
 
                 $(document).on("click", ".cancel-icon", function() {
@@ -196,9 +195,8 @@
                     }
                 });
 
-                $(document).on("click", ".delete-category-icon", function () {
+                $(document).on("click", ".delete-icon", function () {
                     const categoryNo = $(this).siblings(".category-no").text();
-                    alert(categoryNo);
                     if (confirm("카테고리를 삭제하시겠습니까?")) {
                         $.ajax({
                             url: "<c:url value="/${bloger.nickname}/delete-category" />",
