@@ -40,7 +40,6 @@ public class BlogController {
         // 세션의 내용을 모두 교체한 후 페이지를 불러온다
         blogService.initSession(nickname, session);
 
-
         log.debug("블로그 페이지");
         return "blog/blog";
     }
@@ -107,6 +106,29 @@ public class BlogController {
         List<Reply> replies;
         if (optPost.isPresent()) {
             Post post = optPost.get();
+
+            Long cateNo = post.getPostFromCategory().getCategoryNo();
+
+            Optional<List<Post>> optPosts = postJpaRepository.findAllByPostFromCategory_CategoryNo(cateNo);
+            if (optPosts.isPresent()) {
+                Long currNo, prevNo, nextNo;
+                List<Post> posts = optPosts.get();
+                int currIdx = posts.indexOf(post);
+                currNo = posts.get(currIdx).getPostNo();
+                if (currIdx == 0) {
+                    prevNo = 0L;
+                } else {
+                    prevNo = posts.get(currIdx - 1).getPostNo();
+                }
+                if (currIdx == posts.size() -1) {
+                    nextNo = 0L;
+                } else {
+                    nextNo = posts.get(currIdx + 1).getPostNo();
+                }
+                session.setAttribute("currNo", currNo);
+                session.setAttribute("prevNo", prevNo);
+                session.setAttribute("nextNo", nextNo);
+            }
 
             if (optReplyList.isPresent()) {
                 replies = optReplyList.get();

@@ -74,32 +74,76 @@
 
                     <div class="row mb-2">
                         <div class="col-md-6">
-                            <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative card-box">
-                                <div class="col p-4 d-flex flex-column position-static">
-                                    <strong class="d-inline-block mb-2 text-primary">Before</strong>
-                                    <h3 class="mb-0 card-text">${post.title}</h3>
-                                    <div class="mb-1 text-muted">${postRegisterDate}</div>
-                                    <p class="card-text mb-auto">${post.body}</p>
-                                    <a href="#" class="stretched-link">포스팅으로 이동</a>
-                                </div>
-                                <div class=" d-none d-lg-block">
-                                    <div class="bd-placeholder-img">이전 포스트</div>
-                                </div>
-                            </div>
+                            <c:choose>
+                                <c:when test="${prevNo ne 0}">
+                                    <c:forEach items="${posts}" var="item">
+                                        <fmt:parseDate value="${item.registerDate}" pattern="yyyy-MM-dd'T'HH:mm" var="registerLDT" type="both" />
+                                        <fmt:formatDate value="${registerLDT}" pattern="yyyy년 MM월 dd일" var="postRegisterDate" />
+                                        <c:if test="${item.postNo eq prevNo}">
+                                            <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative card-box">
+                                                <div class="col p-4 d-flex flex-column position-static">
+                                                    <strong class="d-inline-block mb-2 text-primary">Before</strong>
+                                                    <h3 class="mb-0 card-text">${item.title}</h3>
+                                                    <div class="mb-1 text-muted">${postRegisterDate}</div>
+                                                    <p class="card-text mb-auto">${item.body}</p>
+                                                    <a href="<c:url value="/${bloger.nickname}/${prevNo}" />" class="stretched-link">포스팅으로 이동</a>
+                                                </div>
+                                                <div class=" d-none d-lg-block">
+                                                    <div class="bd-placeholder-img">이전 포스팅</div>
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative card-box">
+                                        <div class="col p-4 d-flex flex-column position-static">
+                                            <strong class="d-inline-block mb-2 text-primary">Before</strong>
+                                            <h3 class="mb-0 card-text">첫 포스팅입니다.</h3>
+                                            <p class="mb-auto">다른 카테고리로 이동해보세요.</p>
+                                        </div>
+                                        <div class=" d-none d-lg-block">
+                                            <div class="bd-placeholder-img">이전 포스팅</div>
+                                        </div>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                         <div class="col-md-6">
-                            <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative card-box">
-                                <div class="col p-4 d-flex flex-column position-static">
-                                    <strong class="d-inline-block mb-2 text-primary">After</strong>
-                                    <h3 class="mb-0 card-text">${post.title}</h3>
-                                    <div class="mb-1 text-muted">${postRegisterDate}</div>
-                                    <p class="card-text mb-auto">${post.body}</p>
-                                    <a href="#" class="stretched-link">포스팅으로 이동</a>
-                                </div>
-                                <div class="d-none d-lg-block">
-                                    <div class="bd-placeholder-img">다음 포스트</div>
-                                </div>
-                            </div>
+                            <c:choose>
+                                <c:when test="${nextNo ne 0}">
+                                    <c:forEach items="${posts}" var="item">
+                                        <fmt:parseDate value="${item.registerDate}" pattern="yyyy-MM-dd'T'HH:mm" var="registerLDT" type="both" />
+                                        <fmt:formatDate value="${registerLDT}" pattern="yyyy년 MM월 dd일" var="postRegisterDate" />
+                                        <c:if test="${item.postNo eq nextNo}">
+                                            <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative card-box">
+                                                <div class="col p-4 d-flex flex-column position-static">
+                                                    <strong class="d-inline-block mb-2 text-primary">Before</strong>
+                                                    <h3 class="mb-0 card-text">${item.title}</h3>
+                                                    <div class="mb-1 text-muted">${postRegisterDate}</div>
+                                                    <p class="card-text mb-auto">${item.body}</p>
+                                                    <a href="<c:url value="/${bloger.nickname}/${nextNo}" />" class="stretched-link">포스팅으로 이동</a>
+                                                </div>
+                                                <div class=" d-none d-lg-block">
+                                                    <div class="bd-placeholder-img">다음 포스팅</div>
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative card-box">
+                                        <div class="col p-4 d-flex flex-column position-static">
+                                            <strong class="d-inline-block mb-2 text-primary">After</strong>
+                                            <h3 class="mb-0 card-text">마지막 포스팅입니다.</h3>
+                                            <p class="mb-auto">다른 카테고리로 이동해보세요.</p>
+                                        </div>
+                                        <div class=" d-none d-lg-block">
+                                            <div class="bd-placeholder-img">다음 포스팅</div>
+                                        </div>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                     <hr>
