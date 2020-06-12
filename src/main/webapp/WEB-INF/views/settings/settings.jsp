@@ -104,6 +104,7 @@
             $(document).ready(function() {
                 let userNo = '<c:out value="${user.userNo}" />';
                 let blogTitle = '<c:out value="${blog.title}" />';
+                let blogerNickname = '<c:out value="${bloger.nickname}" />';
 
                 function fetch_settings() {
 
@@ -113,6 +114,7 @@
                         success: function(data) {
                             $("#settings").html(data);
                             $("#blog-title").val(blogTitle);
+                            $("#user-nickname").val(blogerNickname);
                         },
                         error: function () {
                             alert("error");
@@ -120,19 +122,22 @@
                     });
                 }
 
-                $(document).on("click", "#update-title-btn", function () {
+                $(document).on("click", "#update-blog-btn", function () {
                     const updatedBlogTitle = $("#blog-title").val();
+                    const updatedUserNickname = $("#user-nickname").val();
                     $.ajax({
                         url: "<c:url value="/${bloger.nickname}/blog-settings" />",
                         method: "POST",
                         data: {
                             title: updatedBlogTitle,
+                            updatedNickname: updatedUserNickname,
                             image: "white",
                         },
                         success: function () {
-                            alert("블로그 제목이 변경되었습니다.");
+                            alert("내 정보가 변경되었습니다.");
                             blogTitle = updatedBlogTitle;
-                            fetch_settings();
+                            blogerNickname = updatedUserNickname;
+                            location.href = "../../" + updatedUserNickname + "/settings";
                         },
                         error: function (data) {
                             alert("error" + data);

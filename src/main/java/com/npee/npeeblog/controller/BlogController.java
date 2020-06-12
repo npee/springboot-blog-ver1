@@ -3,6 +3,7 @@ package com.npee.npeeblog.controller;
 import com.npee.npeeblog.model.entity.*;
 import com.npee.npeeblog.model.repository.*;
 import com.npee.npeeblog.service.BlogServiceImpl;
+import com.npee.npeeblog.service.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,7 @@ public class BlogController {
     private final CategoryJpaRepository categoryJpaRepository;
     private final PostJpaRepository postJpaRepository;
     private final ReplyJpaRepository replyJpaRepository;
+    private final UserServiceImpl userService;
     private final BlogServiceImpl blogService;
 
     /**
@@ -198,23 +200,34 @@ public class BlogController {
                                      HttpSession session) {
 
         blogService.initSession(nickname, session);
+        String newNickname = (String) session.getAttribute("nickname");
+        // User user = (User) session.getAttribute("user");
+        Optional<User> optUser = userJpaRepository.findByNickname(nickname);
+        User user;
+        if (optUser.isPresent()) {
+            user = optUser.get();
+            if (!nickname.equals(user.getNickname())) {
+                log.debug("optUser: " + user.getNickname());
+                log.debug("newNickname:" + newNickname);
+                log.debug("target: " + nickname);
+                log.debug("잘못된 접근입니다.");
+                return "redirect:/";
+            } else {
+                // log.debug("user: " + user.getNickname());
 
-        User user = (User) session.getAttribute("user");
+                List<String> colorList = new ArrayList<>();
+                colorList.add("white");
+                colorList.add("yellow");
+                colorList.add("green");
+                colorList.add("red");
+                session.setAttribute("colorList", colorList);
+                session.setAttribute("user", user);
 
-        if (user == null || !nickname.equals(user.getNickname())) {
-            log.debug("잘못된 접근입니다.");
-            return "redirect:/";
+                return "settings/settings";
+            }
+        } else {
+            return "sign/signin";
         }
-        // log.debug("user: " + user.getNickname());
-
-        List<String> colorList = new ArrayList<>();
-        colorList.add("white");
-        colorList.add("yellow");
-        colorList.add("green");
-        colorList.add("red");
-        session.setAttribute("colorList", colorList);
-
-        return "settings/settings";
     }
 
     @GetMapping("/blog-settings")
@@ -228,6 +241,7 @@ public class BlogController {
 
     @PostMapping("/blog-settings")
     public String blog_settings(@PathVariable String nickname,
+                                @RequestParam String updatedNickname,
                                 @RequestParam String title,
                                 @RequestParam String image,
                                 HttpSession session) {
@@ -247,12 +261,18 @@ public class BlogController {
             blog = optBlog.get();
             if (blog.getBlogFromUser().getUserNo().equals(user.getUserNo())) {
                 blogJpaRepository.save(blogService.builder(blog.getBlogNo(), user, blog.getCount(), title, image));
+                userJpaRepository.save(userService.builder(user.getUserNo(), user.getEmail(), user.getPassword(), updatedNickname));
+                session.setAttribute("nickname", updatedNickname);
+                blogService.initSession(updatedNickname, session);
+                log.debug(updatedNickname + "으로 세션이 초기화되었습니다.");
+                return setRedirectUrl(updatedNickname, "settings");
             } else {
                 log.debug("블로그 수정 권한이 없습니다.");
+                session.setAttribute("nickname", nickname);
+                return setRedirectUrl(nickname, "settings");
             }
         }
-
-        return setRedirectUrl(nickname, "settings");
+        return "redirect:/";
     }
 
     @PostMapping("/update-category")

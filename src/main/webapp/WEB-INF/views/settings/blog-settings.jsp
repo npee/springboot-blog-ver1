@@ -13,20 +13,30 @@
 <%--@elvariable id="blog" type="Blog"--%>
 <%--@elvariable id="categories" type="List<Category>>"--%>
 <%--@elvariable id="colorList" type="List<String>>"--%>
-<div id="settings-user">
-    <div id="user-basic"></div>
-</div>
+
+
+
+
 <div id="settings-blog">
+    <div id="user-basic" class="form-row">
+        <div class="form-group col-md-4">
+            <p class="blog-p">닉네임</p>
+        </div>
+        <div class="form-group col-md-8">
+            <input type="text" id="user-nickname" class="form-control" value="">
+        </div>
+    </div>
+    <hr>
     <div id="blog-basic" class="form-row">
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-4">
             <p class="blog-p">블로그 제목</p>
         </div>
         <div class="form-group col-md-8">
             <input type="text" id="blog-title" class="form-control" value="">
         </div>
-        <div>
-            <button id="update-title-btn" class="btn btn-outline-dark" type="button">수정</button>
-        </div>
+    </div>
+    <div>
+        <button id="update-blog-btn" class="btn btn-outline-dark" type="button">수정</button>
     </div>
 </div>
 <%--<label for="color-box">헤더 색상선택</label>--%>
