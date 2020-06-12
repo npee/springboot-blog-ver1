@@ -66,7 +66,7 @@
                                 <div class="col-md-3"><p class="category-name">카테고리</p></div>
                                 <div class="col-md-8"><p class="category-description">설명</p></div>
                             </div>
-                            <div id="category-box" class="form-row">
+                            <div id="category-box">
                             </div>
                             <div class="category-form form-row">
                                 <div class="form-group col-md-1">
@@ -149,6 +149,44 @@
                                 alert("카테고리가 등록되었습니다.");
                                 inputCategoryName.val("");
                                 inputCategoryDesc.val("");
+                                fetch_category();
+                            },
+                            error: function(data) {
+                                alert("error" + data);
+                            }
+                        });
+                    }
+                });
+
+                $(document).on("click", ".update-category-icon", function() {
+                    $(this).parent().siblings(".update-category-box").css("display", "block");
+                    $(this).parent().siblings(".form-group").children(".category-p").css("display", "none");
+                    $(this).parent().siblings(".form-group").children(".update-input").css("display", "block");
+                    const categoryNo = $(this).parent().siblings(".update-icon-box").children(".category-no").text();
+                    alert(categoryNo);
+                });
+
+                $(document).on("click", ".cancel-icon", function() {
+                    if (confirm("수정을 취소하시겠습니까?")) {
+                        fetch_category();
+                    }
+                });
+
+                $(document).on("click", ".confirm-icon", function() {
+                    const inputUpdateCategoryName = $(this).parent().siblings(".form-group").children(".input-update-category-name");
+                    const inputUpdateCategoryDesc = $(this).parent().siblings(".form-group").children(".input-update-category-description");
+                    const categoryNo = $(this).siblings(".category-no").text();
+
+                    if (confirm("수정하시겠습니까?")) {
+                        $.ajax({
+                            url: "<c:url value="/${bloger.nickname}/update-category" />",
+                            method: "POST",
+                            data: {
+                                updateCategoryNo: categoryNo,
+                                categoryName: inputUpdateCategoryName.val(),
+                                categoryDescription: inputUpdateCategoryDesc.val(),
+                            },
+                            success: function() {
                                 fetch_category();
                             },
                             error: function(data) {

@@ -5,7 +5,7 @@
     display: none;
 }
 
-#update-category-icon, #create-category-icon, .delete-category-icon {
+.update-category-icon, #create-category-icon, .delete-category-icon {
     position: absolute;
     width: 1.5em;
     height: 1.5em;
@@ -15,7 +15,36 @@
     cursor: pointer;
 }
 
-.category-name, .category-description {
+.category-name, .category-description, .category-desc-dummy {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+}
+
+.update-category-box {
+    display: none;
+}
+
+.update-input {
+    display: none;
+}
+
+.update-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1.5em;
+    height: 1.5em;
+    cursor: pointer;
+}
+
+.delete-icon {
+    transform: translate(-300%, -50%);
+}
+
+.cancel-icon {
+    transform: translate(-150%, -50%);
+}
+
+.confirm-icon {
+    transform: translate(0, -50%);
 }
