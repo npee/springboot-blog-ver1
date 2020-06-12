@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
@@ -133,11 +134,5 @@ public class UserController {
 
         session.invalidate();
         return "redirect:/";
-    }
-
-    // TODO: 사용자 정보 수정
-    @GetMapping("/settings")
-    public String user_settings() {
-        return "settings/user-settings";
     }
 }
