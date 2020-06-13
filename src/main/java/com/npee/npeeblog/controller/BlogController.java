@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -259,7 +260,7 @@ public class BlogController {
                                 @RequestParam String updatedNickname,
                                 @RequestParam String title,
                                 @RequestParam String image,
-                                HttpSession session) {
+                                HttpSession session) throws SQLIntegrityConstraintViolationException {
 
         // TODO: 블로그 프로필 수정 - view 작업 직전
         blogService.initSession(nickname, session);
@@ -276,11 +277,20 @@ public class BlogController {
             blog = optBlog.get();
             if (blog.getBlogFromUser().getUserNo().equals(user.getUserNo())) {
                 blogJpaRepository.save(blogService.builder(blog.getBlogNo(), user, blog.getCount(), title, image));
-                userJpaRepository.save(userService.builder(user.getUserNo(), user.getEmail(), user.getPassword(), updatedNickname));
-                session.setAttribute("nickname", updatedNickname);
-                blogService.initSession(updatedNickname, session);
-                log.debug(updatedNickname + "으로 세션이 초기화되었습니다.");
-                return setRedirectUrl(updatedNickname, "settings");
+
+                // TODO: 중복 아이디에 대한 예외처리
+                if (userJpaRepository.findByNickname(updatedNickname).isPresent()) {
+                    session.setAttribute("nickname", nickname);
+                    log.debug("이미 존재하는 닉네임입니다.");
+                    log.debug("session(nickname): " + nickname);
+                    throw new SQLIntegrityConstraintViolationException();
+                } else {
+                    userJpaRepository.save(userService.builder(user.getUserNo(), user.getEmail(), user.getPassword(), updatedNickname));
+                    session.setAttribute("nickname", updatedNickname);
+                    blogService.initSession(updatedNickname, session);
+                    log.debug(updatedNickname + "으로 세션이 초기화되었습니다.");
+                    return setRedirectUrl(updatedNickname, "settings");
+                }
             } else {
                 log.debug("블로그 수정 권한이 없습니다.");
                 session.setAttribute("nickname", nickname);

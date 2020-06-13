@@ -131,7 +131,9 @@
                             location.href = "../../" + updatedUserNickname + "/settings";
                         },
                         error: function (data) {
-                            alert("error" + data);
+                            // alert("error" + data);
+                            alert("이미 존재하는 닉네임입니다.");
+                            fetch_settings();
                         }
                     });
                 });
