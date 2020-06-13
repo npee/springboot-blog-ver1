@@ -84,15 +84,6 @@
                         <p class="mb-0">email: ${bloger.email}</p>
                         <p class="mb-0">기타 프로필</p>
                     </div>
-
-                    <div class="p-4">
-                        <h4>메뉴</h4>
-                        <ol class="list-unstyled mb-0">
-                            <c:forEach items="${categories}" var="category">
-                                <li><a href="<c:url value="/${bloger.nickname}?selectedCategory=${category.category}" />">${category.category}</a></li>
-                            </c:forEach>
-                        </ol>
-                    </div>
                 </aside>
 
             </div><!-- /.row -->

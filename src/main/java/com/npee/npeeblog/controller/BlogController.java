@@ -222,21 +222,14 @@ public class BlogController {
                                      HttpSession session) {
 
         blogService.initSession(nickname, session);
-        String newNickname = (String) session.getAttribute("nickname");
-        // User user = (User) session.getAttribute("user");
         Optional<User> optUser = userJpaRepository.findByNickname(nickname);
         User user;
         if (optUser.isPresent()) {
             user = optUser.get();
             if (!nickname.equals(user.getNickname())) {
-                log.debug("optUser: " + user.getNickname());
-                log.debug("newNickname:" + newNickname);
-                log.debug("target: " + nickname);
                 log.debug("잘못된 접근입니다.");
                 return "redirect:/";
             } else {
-                // log.debug("user: " + user.getNickname());
-
                 List<String> colorList = new ArrayList<>();
                 colorList.add("white");
                 colorList.add("yellow");
@@ -415,7 +408,6 @@ public class BlogController {
 
         if (user == replier) {
             if (blind.equals("true")) {
-                // TODO: View에서 경고 메시지 출력하도록 변경하기
                 log.error("Blind 처리된 댓글은 수정이 불가능합니다.");
             } else if (isBlind == null || blind.equals("false")) {
                 replyJpaRepository.save(blogService.builder(replyNo, updatedReply, "false", post, user));

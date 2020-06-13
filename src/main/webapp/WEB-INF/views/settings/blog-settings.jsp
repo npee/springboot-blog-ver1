@@ -13,10 +13,6 @@
 <%--@elvariable id="blog" type="Blog"--%>
 <%--@elvariable id="categories" type="List<Category>>"--%>
 <%--@elvariable id="colorList" type="List<String>>"--%>
-
-
-
-
 <div id="settings-blog">
     <div id="user-basic" class="form-row">
         <div class="form-group col-md-4">
@@ -35,20 +31,17 @@
             <input type="text" id="blog-title" class="form-control" value="">
         </div>
     </div>
-    <div>
-        <button id="update-blog-btn" class="btn btn-outline-dark" type="button">수정</button>
+    <hr>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <p> </p>
+        </div>
+        <div class="form-group col-md-6">
+            <p> </p>
+        </div>
+        <div class="form-group col-md-2">
+            <button id="update-blog-btn" class="btn btn-outline-dark" type="button">적용</button>
+        </div>
     </div>
+
 </div>
-<%--<label for="color-box">헤더 색상선택</label>--%>
-<%--<select name="image" id="color-box">--%>
-<%--    <c:forEach items="${colorList}" var="color">--%>
-<%--        <c:choose>--%>
-<%--            <c:when test="${color eq blog.image}">--%>
-<%--                <option value="${color}" selected="selected">${color}</option>--%>
-<%--            </c:when>--%>
-<%--            <c:otherwise>--%>
-<%--                <option value="${color}">${color}</option>--%>
-<%--            </c:otherwise>--%>
-<%--        </c:choose>--%>
-<%--    </c:forEach>--%>
-<%--</select>--%>
