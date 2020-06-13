@@ -223,26 +223,23 @@ public class BlogController {
                                      HttpSession session) {
 
         blogService.initSession(nickname, session);
-        Optional<User> optUser = userJpaRepository.findByNickname(nickname);
-        User user;
-        if (optUser.isPresent()) {
-            user = optUser.get();
-            if (!nickname.equals(user.getNickname())) {
-                log.debug("잘못된 접근입니다.");
-                return "redirect:/";
-            } else {
-                List<String> colorList = new ArrayList<>();
-                colorList.add("white");
-                colorList.add("yellow");
-                colorList.add("green");
-                colorList.add("red");
-                session.setAttribute("colorList", colorList);
-                session.setAttribute("user", user);
+        User user = (User) session.getAttribute("user");
 
-                return "settings/settings";
-            }
+        log.debug("bloger: " + nickname);
+        log.debug("user: " + user.getNickname());
+        if (!nickname.equals(user.getNickname())) {
+            log.debug("잘못된 접근입니다.");
+            return "redirect:/";
         } else {
-            return "sign/signin";
+            List<String> colorList = new ArrayList<>();
+            colorList.add("white");
+            colorList.add("yellow");
+            colorList.add("green");
+            colorList.add("red");
+            session.setAttribute("colorList", colorList);
+            session.setAttribute("user", user);
+            log.debug("설정 페이지로 이동합니다.");
+            return "settings/settings";
         }
     }
 
