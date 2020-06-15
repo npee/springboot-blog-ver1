@@ -1,6 +1,31 @@
 # springboot-blog
 ## Summary
 ## Update
+### 2020.06.13
+* Bug fix
+### 2020.06.12
+* Update update-reply scripts, view
+* Bug fix
+### 2020.06.11
+* Add create-reply scripts
+* Add icons for blog-settings
+* Update delete-reply scripts
+### 2020.06.09
+* Add delete-reply scripts
+* Add update-reply scripts
+* Fix blind-reply button
+* Bug fix
+### 2020.06.07
+* Update post view
+### 2020.06.05
+* Update layout of post view
+* Update view (print post list of selected category)
+### 2020.06.04
+* Add Buttons(settings, blog)
+* Update target URL for Logout request
+### 2020.06.03
+* Import Bootstrap 4.5.0
+* Add Login template
 ### 2020.06.01
 * Create function(Update blog settings)
 * Create function(Delete selected post)
