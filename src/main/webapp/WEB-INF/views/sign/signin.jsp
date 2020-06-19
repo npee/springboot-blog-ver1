@@ -54,7 +54,7 @@
                 </label>
             </div>
             <button id="signin-btn" class="btn btn-lg btn-primary btn-block" type="button">Sign in</button>
-            <p class="mt-5 mb-3 text-muted">&copy; 2017-2020</p>
+            <p class="mt-5 mb-3 text-muted">&copy; 2020~</p>
         </form>
     <script src="<c:url value="/webjars/jquery/3.4.1/jquery.min.js" />"></script>
     <script>

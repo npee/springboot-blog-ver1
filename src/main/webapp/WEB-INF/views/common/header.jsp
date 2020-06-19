@@ -41,7 +41,9 @@
             </div>
 
             <div class="col-4 text-center">
-                <a class="blog-header-logo text-dark" href="<c:url value="/" /> ">로고자리</a>
+                <a class="blog-header-logo text-dark" href="<c:url value="/" /> ">
+                    명찬의 JBlog
+                </a>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
                 <a class="text-muted" href="#" aria-label="Search">

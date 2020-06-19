@@ -61,9 +61,10 @@
     </div>
 
     <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
-      <div class="col-md-6 px-0">
-        <h1 class="display-4">Title of a longer featured blog post 한글 폰트는 어떤것?</h1>
-        <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about whatâ€™s most interesting in this postâ€™s contents. 한글 폰트</p>
+      <div class="col-md-12 px-0">
+        <h1 class="display-4">index에서 이동하는 링크는 모두 막혀있습니다.</h1>
+        <p class="lead my-3">회원가입, 블로그 관리, 카테고리 관리, 포스트 관리, 댓글 관리 기능이 있습니다.</p>
+        <p class="lead my-3">오른쪽 위의 버튼을 눌러 회원가입부터 진행해 주세요</p>
         <p class="lead mb-0"><a href="#" class="text-white font-weight-bold">Continue reading...</a></p>
       </div>
     </div>
@@ -73,7 +74,7 @@
         <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
           <div class="col p-4 d-flex flex-column position-static">
             <strong class="d-inline-block mb-2 text-primary">World</strong>
-            <h3 class="mb-0">Featured post</h3>
+            <h3 class="mb-0">사용하지 않는</h3>
             <div class="mb-1 text-muted">Nov 12</div>
             <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
             <a href="#" class="stretched-link">Continue reading</a>
@@ -87,7 +88,7 @@
         <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
           <div class="col p-4 d-flex flex-column position-static">
             <strong class="d-inline-block mb-2 text-success">Design</strong>
-            <h3 class="mb-0">Post title</h3>
+            <h3 class="mb-0">카드입니다~</h3>
             <div class="mb-1 text-muted">Nov 11</div>
             <p class="mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
             <a href="#" class="stretched-link">Continue reading</a>
