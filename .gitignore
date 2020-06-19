@@ -125,16 +125,16 @@ gradle-app.setting
 
 ### Application.yml Files
 /src/main/resources/*.yml
-!application.yml
+# application.yml
 
 # Default
-# application-default.yml
+!application-default.yml
 
 # OAuth Authentication Settings
 # application-auth.yml
 
 # Develope
-# application-dev.yml
+!application-dev.yml
 
 # Local
 # application-local.yml

@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: asdf1234
+    url: jdbc:mysql://springboot-blog-ver1.ceym9w58p9rn.ap-northeast-2.rds.amazonaws.com:3306/springboot_blog_ver1
+    username: admin
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties.hibernate.hbm2ddl.auto: update
+    generate-ddl: true
+    show-sql: true

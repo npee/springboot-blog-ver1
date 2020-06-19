@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    include:
+      # - local
+      - dev
+  messages:
+    basename: i18n/exception
+    encoding: UTF-8
+
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+
+logging:
+  level:
+    org.springframework.web.client.RestTemplate: DEBUG
+    org.springframework.security: DEBUG
+    com.npee.npeeblog: DEBUG
