@@ -35,6 +35,20 @@
                     font-size: 3.5rem;
                 }
             }
+
+            #category2-label {
+                width: 40%;
+            }
+            #category2 {
+                width: 60%;
+            }
+            #post-title2-label {
+                width: 20%;
+            }
+            #post-title2 {
+                width: 80%;
+            }
+
         </style>
         <!-- Custom styles for this template -->
         <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
@@ -43,50 +57,81 @@
     </head>
     <body>
         <c:import url="/WEB-INF/views/common/header.jsp" />
-        <h1>body</h1>
-        <h2>write</h2>
-        <!-- start -->
-        <c:choose>
-            <c:when test="${empty categories}">
-                <p>카테고리를 먼저 생성해주세요.</p>
-            </c:when>
-            <c:when test="${user.userNo eq bloger.userNo }">
-                <form action="<c:url value="/${user.nickname}/write" />" method="POST">
-                    <label for="category">Select Category</label>
-                    <select name="categoryNo" id="category">
-                        <c:forEach items="${categories}" var="category">
-                            <c:choose>
-                                <c:when test="${category.categoryNo eq post.postFromCategory.categoryNo }">
-                                    <option value="${category.categoryNo}" selected="selected">${category.category}</option>
-                                </c:when>
-                                <c:otherwise>
-                                    <option value="${category.categoryNo}">${category.category}</option>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
-                    </select><br>
-                    <label for="post-title">title: </label>
-                    <input id="post-title" type="text" name="postTitle" value="${post.title}"><br>
-                    <label for="post-body">body: </label>
-                    <input id="post-body" type="text" name="postBody" value="${post.body}"><br>
+        <main role="main" class="container">
+            <!-- Bootstrap form -->
+            <form>
+                <div class="form-row">
+                    <div class="col-md-12 my-3">
+                        <h1 class="my-2">글쓰기</h1>
+                    </div>
+
+                    <div class="col-md-4 form-inline mb-3">
+                        <label id="category2-label" for="category2">카테고리</label>
+                        <select class="custom-select" name="categoryNo2" id="category2">
+                            <c:forEach items="${categories}" var="category">
+                                <c:choose>
+                                    <c:when test="${category.categoryNo eq post.postFromCategory.categoryNo }">
+                                        <option value="${category.categoryNo}" selected="selected">${category.category}</option>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <option value="${category.categoryNo}">${category.category}</option>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="col-md-8 form-inline mb-3">
+                        <label id="post-title2-label" for="post-title2">제목</label>
+                        <input type="text" class="form-control" width="100%" id="post-title2" value="${post.title}">
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="sr-only" for="post-body2">본문</label>
+                        <textarea class="form-control" id="post-body2" rows="10">${post.body}</textarea>
+                    </div>
                     <c:choose>
                         <c:when test="${empty post.postFromCategory}">
-                            <input type="hidden" name="postNo" value="0">
-                            <button id="post-write" type="submit">작성 완료</button>
+                            <c:set var="value" value="0" />
+                            <c:set var="btnText" value="작성" />
                         </c:when>
                         <c:otherwise>
-                            <input type="hidden" name="postNo" value="${post.postNo}">
-                            <button id="post-update" type="submit">수정 완료</button>
+                            <c:set var="value" value="${post.postNo}" />
+                            <c:set var="btnText" value="수정" />
                         </c:otherwise>
                     </c:choose>
-
-                </form>
-            </c:when>
-            <c:otherwise>
-                <h3>Need Sign</h3>
-            </c:otherwise>
-        </c:choose>
-        <!-- end -->
+                    <input id="category2-value" type="hidden" name="postNo" value="${value}">
+                    <button id="post-btn" class="btn btn-primary mx-2 my-2" type="button">${btnText}</button>
+                </div>
+            </form>
+        </main>
         <c:import url="/WEB-INF/views/common/footer.jsp" />
+        <script src="<c:url value="/webjars/jquery/3.4.1/jquery.min.js" />"></script>
+        <script>
+            $(function() {
+                $(document).on("click", "#post-btn", function() {
+                    $.ajax({
+                        url: '<c:url value="/${user.nickname}/write" />',
+                        method: 'POST',
+                        data: {
+                            postNo: $("#category2-value").val(),
+                            categoryNo: $("#category2").find(":selected").val(),
+                            postTitle: $("#post-title2").val(),
+                            postBody: $("#post-body2").val(),
+                        },
+                        success: function() {
+                            if ("작성" === $("#post-btn").text()) {
+                                alert("포스트가 등록되었습니다.");
+                            } else {
+                                alert("포스트가 수정되었습니다.");
+                            }
+                            location.href = "./";
+                        },
+                        error: function(data) {
+                            alert("error" + data);
+                        }
+                    });
+                });
+            });
+        </script>
     </body>
 </html>
