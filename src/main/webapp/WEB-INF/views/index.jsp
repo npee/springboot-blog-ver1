@@ -62,7 +62,7 @@
 
     <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
       <div class="col-md-12 px-0">
-        <h1 class="display-4">index에서 이동하는 링크는 모두 막혀있습니다.</h1>
+        <h1 class="display-4">index에서 이동하는 링크는 동작하지 않습니다.</h1>
         <p class="lead my-3">회원가입, 블로그 관리, 카테고리 관리, 포스트 관리, 댓글 관리 기능이 있습니다.</p>
         <p class="lead my-3">오른쪽 위의 버튼을 눌러 회원가입부터 진행해 주세요</p>
         <p class="lead mb-0"><a href="#" class="text-white font-weight-bold">Continue reading...</a></p>

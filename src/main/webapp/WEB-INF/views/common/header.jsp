@@ -34,21 +34,13 @@
 --%>
 <div class="container">
     <header class="blog-header py-3">
-        <div class="row flex-nowrap justify-content-between align-items-center">
-
-            <div class="col-4 pt-1">
-                <!--<a class="text-muted" href="#">Subscribe</a>-->
-            </div>
-
-            <div class="col-4 text-center">
+        <div class="row">
+            <div id="logo" class="col-2 text-center">
                 <a class="blog-header-logo text-dark" href="<c:url value="/" /> ">
                     명찬의 JBlog
                 </a>
             </div>
-            <div class="col-4 d-flex justify-content-end align-items-center">
-                <a class="text-muted" href="#" aria-label="Search">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img" viewBox="0 0 24 24" focusable="false"><title>Search</title><circle cx="10.5" cy="10.5" r="7.5"/><path d="M21 21l-5.2-5.2"/></svg>
-                </a>
+            <div id="header-btn-box" class="col-10 d-flex justify-content-end align-items-center">
                 <c:choose>
                     <c:when test="${empty user}">
                         <a class="auth-btn btn btn-sm btn-outline-secondary" href="<c:url value="/user/signup" />">회원가입</a>
