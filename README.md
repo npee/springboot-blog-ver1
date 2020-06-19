@@ -5,6 +5,7 @@
 * Bug fix
 ### 2020.06.12
 * Update update-reply scripts, view
+* Create builder for updating user
 * Bug fix
 ### 2020.06.11
 * Add create-reply scripts
