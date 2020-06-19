@@ -1,6 +1,10 @@
 # springboot-blog
 ## Summary
 ## Update
+### 2020.06.19
+* Update view(Write/Update post)
+### 2020.06.18
+* Connect to Amazon RDS
 ### 2020.06.13
 * Bug fix
 ### 2020.06.12
